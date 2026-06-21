@@ -34,9 +34,9 @@
       --line: rgba(255, 255, 255, 0.38);
       --gold: #d9b878;
       --paper-panel: rgba(248, 237, 213, 0.88);
-      --rubbing-texture: url("assets/rubbing-texture.png");
-      --story-light-bg: url("assets/story-bg-light.png");
-      --stone-material: url("assets/stone-material.png");
+      --rubbing-texture: url("assets/rubbing-texture.jpg");
+      --story-light-bg: url("assets/story-bg-light.jpg");
+      --stone-material: url("assets/stone-material.jpg");
       --story-stone-material: url("assets/story-stone-material.png");
       --ease: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -197,7 +197,7 @@
     .page {
       position: absolute;
       inset: 0;
-      display: grid;
+      display: none;
       align-items: center;
       min-height: 100vh;
       padding: 112px 32px 34px;
@@ -210,6 +210,7 @@
     }
 
     .page.active {
+      display: grid;
       opacity: 1;
       pointer-events: auto;
       transform: translateY(0);
@@ -2592,7 +2593,7 @@
     </main>
   </div>
 
-  <audio id="bgMusic" preload="auto" loop src="assets/xiping-background-music.mp3"></audio>
+  <audio id="bgMusic" preload="none" loop src="assets/xiping-background-music.mp3"></audio>
   <button class="music-toggle is-paused" id="musicToggle" type="button" aria-label="播放背景音乐" title="背景音乐">
     <span class="xun-icon" aria-hidden="true"></span>
   </button>
@@ -2608,8 +2609,7 @@
       topbar.classList.toggle("hidden", pageId === "cover");
       navButtons.forEach((button) => button.classList.toggle("active", button.dataset.nav === pageId));
       if (pageId === "rubbing") {
-        resizeCanvas();
-        updateStep();
+        ensureRubbingCanvasReady();
       }
     }
 
@@ -2833,7 +2833,7 @@
       card.setAttribute("aria-label", `查看${book.name}说明`);
       card.style.setProperty("--book-color", book.color);
       card.innerHTML = `
-        <div class="book-object"><img class="book-image" src="${book.image}" alt="${book.name}"></div>
+        <div class="book-object"><img class="book-image" src="${book.image}" alt="${book.name}" loading="lazy" decoding="async"></div>
       `;
       card.addEventListener("pointerenter", () => setBook(index));
       card.addEventListener("mouseenter", () => setBook(index));
@@ -2936,8 +2936,23 @@
     const gridCols = 12;
     const gridRows = 8;
     const stoneMaterialImage = new Image();
-    stoneMaterialImage.src = "assets/stone-material.png";
     stoneMaterialImage.addEventListener("load", drawCanvas);
+    let stoneMaterialRequested = false;
+    let canvasInitialized = false;
+
+    function ensureRubbingCanvasReady() {
+      if (!stoneMaterialRequested) {
+        stoneMaterialRequested = true;
+        stoneMaterialImage.src = "assets/stone-material.jpg";
+      }
+      resizeCanvas();
+      if (!canvasInitialized) {
+        canvasInitialized = true;
+        resetCanvasState();
+      } else {
+        updateStep();
+      }
+    }
 
     function resetCanvasState() {
       dust = Array.from({ length: 160 }, () => ({
@@ -3295,7 +3310,9 @@
       paperStartX = null;
     });
 
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", () => {
+      if (canvasInitialized) resizeCanvas();
+    });
 
     const timeline = document.getElementById("timeline");
     let timelineTimers = [];
@@ -3636,8 +3653,6 @@
 
     renderPassage(currentPassageIndex);
 
-    resetCanvasState();
-    updateStep();
   </script>
 </body>
 </html>
