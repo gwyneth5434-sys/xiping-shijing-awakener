@@ -1,0 +1,3643 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>熹平石经·千年唤醒器</title>
+  <style>
+    @font-face {
+      font-family: "Ma Shan Zheng";
+      src: url("assets/mashan-zheng.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "CooperZhengKai";
+      src: url("assets/cooperzhengkai-2.0.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --paper: #f5f0e6;
+      --paper-strong: #fff8eb;
+      --stone: #6b7074;
+      --ink: #1e1f22;
+      --cinnabar: #b43c2a;
+      --brown: #2c241b;
+      --muted: rgba(44, 36, 27, 0.68);
+      --glass: rgba(255, 248, 235, 0.42);
+      --glass-strong: rgba(255, 255, 255, 0.52);
+      --line: rgba(255, 255, 255, 0.38);
+      --gold: #d9b878;
+      --paper-panel: rgba(248, 237, 213, 0.88);
+      --rubbing-texture: url("assets/rubbing-texture.png");
+      --story-light-bg: url("assets/story-bg-light.png");
+      --stone-material: url("assets/stone-material.png");
+      --story-stone-material: url("assets/story-stone-material.png");
+      --ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+      color: var(--brown);
+      background:
+        linear-gradient(180deg, rgba(6, 6, 5, 0.2), rgba(6, 6, 5, 0.52)),
+        var(--rubbing-texture) center / cover fixed,
+        #0a0908;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.34;
+      background-image:
+        radial-gradient(circle at 16% 28%, rgba(245, 226, 177, 0.1) 0 1px, transparent 1px),
+        radial-gradient(circle at 82% 12%, rgba(245, 226, 177, 0.08) 0 1px, transparent 1px),
+        radial-gradient(circle at 54% 86%, rgba(180, 60, 42, 0.06) 0 1px, transparent 1px);
+      background-size: 18px 18px, 24px 24px, 32px 32px;
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      position: relative;
+      min-height: 100vh;
+      z-index: 1;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 22px;
+      left: 50%;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      width: min(1120px, calc(100vw - 32px));
+      min-height: 66px;
+      padding: 12px 18px;
+      border: 1px solid rgba(255, 246, 222, 0.42);
+      border-radius: 28px;
+      background: rgba(248, 237, 213, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
+      transform: translateX(-50%);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .topbar.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -20px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+      color: var(--ink);
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: clamp(24px, 2vw, 34px);
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      background:
+        linear-gradient(145deg, rgba(107, 112, 116, 0.98), rgba(64, 67, 69, 0.9)),
+        radial-gradient(circle at 40% 28%, rgba(255, 255, 255, 0.18), transparent 48%);
+      clip-path: polygon(12% 15%, 78% 6%, 96% 34%, 84% 88%, 36% 94%, 6% 62%);
+      box-shadow: inset 8px 8px 18px rgba(255, 255, 255, 0.08), inset -12px -10px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav button,
+    .glass-button,
+    .year-button,
+    .tool-button,
+    .round-button {
+      color: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 40px rgba(120, 80, 60, 0.08);
+      transition:
+        transform 0.45s var(--ease),
+        background 0.35s var(--ease),
+        color 0.35s ease,
+        border-color 0.35s ease,
+        opacity 0.35s ease;
+    }
+
+    .nav button {
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .nav button:hover,
+    .glass-button:hover,
+    .year-button:hover,
+    .tool-button:not(:disabled):hover,
+    .round-button:hover {
+      background: rgba(255, 255, 255, 0.36);
+      transform: translateY(-2px);
+    }
+
+    .nav button:active,
+    .glass-button:active,
+    .year-button:active,
+    .tool-button:not(:disabled):active,
+    .round-button:active,
+    .book-card:active {
+      transform: scale(0.94);
+    }
+
+    .nav button.active {
+      color: #fff;
+      background: rgba(180, 60, 42, 0.88);
+      border-color: rgba(180, 60, 42, 0.42);
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      align-items: center;
+      min-height: 100vh;
+      padding: 112px 32px 34px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px);
+      transition: opacity 0.52s ease, transform 0.52s var(--ease);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .page.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .cover {
+      padding: 44px 24px;
+      text-align: center;
+      background:
+        radial-gradient(circle at 82% 16%, rgba(217, 184, 120, 0.18), transparent 18%),
+        linear-gradient(90deg, rgba(10, 9, 8, 0.76), rgba(10, 9, 8, 0.24) 42%, rgba(10, 9, 8, 0.5)),
+        var(--rubbing-texture) center / cover;
+    }
+
+    .cover-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 0.78fr 1fr;
+      align-items: center;
+      gap: clamp(24px, 5vw, 76px);
+      width: min(1180px, 92vw);
+      min-height: min(560px, 68vh);
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 60px);
+      text-align: left;
+      border: 1px solid rgba(255, 246, 222, 0.36);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 84% 14%, rgba(217, 184, 120, 0.18), transparent 22%),
+        linear-gradient(135deg, rgba(248, 237, 213, 0.93), rgba(245, 232, 203, 0.82));
+      box-shadow: 0 26px 90px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+      transform: translateY(-2vh);
+    }
+
+    .cover-content::before {
+      content: "学而时习之\A 不亦说乎\A 有朋自远方来";
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(360px, 34vw);
+      aspect-ratio: 0.78;
+      justify-self: center;
+      background:
+        radial-gradient(circle at 42% 36%, rgba(245, 228, 178, 0.26), transparent 30%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.38)),
+        var(--rubbing-texture) center / cover;
+      clip-path: polygon(18% 3%, 72% 5%, 94% 26%, 87% 84%, 62% 97%, 22% 91%, 5% 68%, 9% 20%);
+      box-shadow:
+        inset 0 0 50px rgba(217, 184, 120, 0.18),
+        0 24px 64px rgba(0, 0, 0, 0.24);
+      color: rgba(248, 237, 213, 0.38);
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: clamp(28px, 3vw, 46px);
+      line-height: 1.1;
+      text-align: center;
+      white-space: pre;
+      writing-mode: vertical-rl;
+      filter: contrast(1.15) brightness(1.04);
+    }
+
+    .cover-content::after {
+      content: "";
+      position: absolute;
+      right: -8%;
+      bottom: -18%;
+      width: 38%;
+      height: 52%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(40, 36, 30, 0.15), transparent 68%);
+      filter: blur(16px);
+      pointer-events: none;
+    }
+
+    .cover-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-text .concept {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .cover h1 {
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: clamp(54px, 6.8vw, 96px);
+      line-height: 1.05;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .cover h1 span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      margin: 18px auto 0;
+      color: rgba(44, 36, 27, 0.8);
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 600;
+    }
+
+    .red-line {
+      width: min(520px, 62vw);
+      height: 2px;
+      margin: 28px 0 22px;
+      background: linear-gradient(90deg, var(--cinnabar), rgba(180, 60, 42, 0.1), transparent);
+    }
+
+    .concept {
+      margin: 0 auto;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(13px, 1.4vw, 18px);
+      font-style: italic;
+      line-height: 1.9;
+    }
+
+    .cover-entry {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .cover-note {
+      color: rgba(44, 36, 27, 0.58);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .glass-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 14px 26px;
+      border-radius: 24px;
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+
+    .glass-button.primary {
+      color: #fff;
+      background: rgba(180, 60, 42, 0.86);
+      border-color: rgba(180, 60, 42, 0.45);
+    }
+
+    .glass-button.dark {
+      color: #fff;
+      background: rgba(30, 31, 34, 0.36);
+    }
+
+    .music-toggle {
+      position: fixed;
+      right: clamp(14px, 2vw, 24px);
+      bottom: clamp(14px, 2vw, 24px);
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(248, 237, 213, 0.28);
+      border-radius: 50%;
+      background: rgba(20, 18, 16, 0.18);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+      opacity: 0.42;
+      backdrop-filter: blur(12px);
+      transition: opacity 0.24s ease, transform 0.24s ease, background 0.24s ease;
+    }
+
+    .music-toggle:hover {
+      opacity: 0.78;
+      background: rgba(248, 237, 213, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .music-toggle[hidden] {
+      display: none;
+    }
+
+    .xun-icon {
+      position: relative;
+      display: block;
+      width: 24px;
+      height: 29px;
+      border-radius: 48% 48% 42% 42% / 44% 44% 54% 54%;
+      background:
+        radial-gradient(circle at 34% 24%, rgba(255, 244, 210, 0.24), transparent 26%),
+        linear-gradient(145deg, rgba(162, 115, 66, 0.92), rgba(86, 61, 42, 0.96));
+      box-shadow:
+        inset 3px 3px 8px rgba(255, 242, 196, 0.2),
+        inset -5px -6px 10px rgba(0, 0, 0, 0.3);
+      clip-path: polygon(46% 0, 68% 9%, 88% 36%, 84% 78%, 58% 100%, 25% 92%, 10% 62%, 16% 28%);
+    }
+
+    .xun-icon::before,
+    .xun-icon::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(30, 22, 16, 0.68);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .xun-icon::before {
+      top: 5px;
+      left: 9px;
+      width: 7px;
+      height: 5px;
+    }
+
+    .xun-icon::after {
+      top: 13px;
+      left: 10px;
+      width: 4px;
+      height: 4px;
+      box-shadow:
+        -5px 6px 0 rgba(30, 22, 16, 0.62),
+        5px 6px 0 rgba(30, 22, 16, 0.62),
+        0 12px 0 rgba(30, 22, 16, 0.58);
+    }
+
+    .music-toggle.is-paused .xun-icon {
+      opacity: 0.58;
+    }
+
+    .music-toggle.is-paused::after {
+      content: "";
+      position: absolute;
+      width: 25px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(180, 60, 42, 0.72);
+      transform: rotate(-38deg);
+    }
+
+    .section-shell {
+      width: min(1180px, calc(100vw - 36px));
+      margin: 0 auto;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section-title h2 {
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: clamp(34px, 4.4vw, 68px);
+      color: var(--ink);
+      line-height: 1.05;
+    }
+
+    .section-title p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .story-page {
+      transition: opacity 0.52s ease, transform 0.52s var(--ease), background 0.7s ease;
+    }
+
+    .story-page .section-shell {
+      width: min(1280px, calc(100vw - 56px));
+    }
+
+    .story-page[data-era="han"] {
+      background:
+        linear-gradient(180deg, rgba(248, 240, 222, 0.52), rgba(216, 186, 129, 0.46)),
+        var(--story-light-bg) center / cover;
+    }
+
+    .story-page[data-era="war"] {
+      background:
+        radial-gradient(circle at 72% 28%, rgba(180, 60, 42, 0.2), transparent 28%),
+        linear-gradient(180deg, rgba(78, 38, 32, 0.66), rgba(84, 54, 41, 0.72)),
+        var(--story-light-bg) center / cover;
+      color: #fff;
+    }
+
+    .story-page[data-era="study"] {
+      background:
+        radial-gradient(circle at 18% 20%, rgba(86, 104, 82, 0.18), transparent 32%),
+        linear-gradient(180deg, rgba(218, 224, 205, 0.58), rgba(169, 169, 132, 0.54)),
+        var(--story-light-bg) center / cover;
+    }
+
+    .story-page[data-era="digital"] {
+      background:
+        radial-gradient(circle at 76% 20%, rgba(71, 141, 168, 0.28), transparent 28%),
+        linear-gradient(180deg, rgba(33, 47, 57, 0.72), rgba(40, 48, 55, 0.72)),
+        var(--story-light-bg) center / cover;
+      color: #fff;
+    }
+
+    .story-page[data-era="war"] .section-title h2,
+    .story-page[data-era="digital"] .section-title h2 {
+      color: #f8edd5;
+    }
+
+    .story-layout {
+      display: grid;
+      grid-template-columns: minmax(360px, 0.98fr) minmax(460px, 1.02fr);
+      gap: clamp(42px, 5.4vw, 78px);
+      align-items: center;
+    }
+
+    .stone-stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: min(52vh, 520px);
+      border-radius: 36px;
+      overflow: visible;
+    }
+
+    .architecture,
+    .data-lines,
+    .mountain-wash,
+    .embers {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .story-page[data-era="han"] .architecture {
+      opacity: 0.38;
+      background:
+        linear-gradient(160deg, transparent 58%, rgba(99, 74, 42, 0.16) 58% 60%, transparent 60%),
+        linear-gradient(20deg, transparent 56%, rgba(99, 74, 42, 0.13) 56% 58%, transparent 58%),
+        linear-gradient(to top, rgba(99, 74, 42, 0.08), transparent 42%);
+    }
+
+    .story-page[data-era="war"] .embers {
+      opacity: 0.8;
+      background:
+        radial-gradient(circle at 18% 44%, rgba(255, 180, 94, 0.35) 0 3px, transparent 4px),
+        radial-gradient(circle at 78% 18%, rgba(255, 136, 82, 0.28) 0 2px, transparent 3px),
+        radial-gradient(circle at 62% 70%, rgba(255, 196, 106, 0.34) 0 3px, transparent 4px),
+        radial-gradient(circle at 40% 25%, rgba(255, 122, 74, 0.24) 0 2px, transparent 3px);
+      animation: floatUp 8s linear infinite;
+    }
+
+    .story-page[data-era="study"] .mountain-wash {
+      opacity: 0.58;
+      background:
+        radial-gradient(ellipse at 25% 70%, rgba(70, 92, 78, 0.18), transparent 42%),
+        radial-gradient(ellipse at 72% 62%, rgba(70, 92, 78, 0.14), transparent 38%);
+      filter: blur(8px);
+    }
+
+    .story-page[data-era="digital"] .data-lines {
+      opacity: 0.68;
+      background:
+        linear-gradient(90deg, transparent 0 9%, rgba(123, 205, 226, 0.16) 9.5% 10%, transparent 10.5% 100%),
+        linear-gradient(0deg, transparent 0 17%, rgba(123, 205, 226, 0.12) 17.5% 18%, transparent 18.5% 100%);
+      background-size: 70px 70px;
+      animation: dataMove 9s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(12px);
+      }
+      100% {
+        transform: translateY(-24px);
+      }
+    }
+
+    @keyframes dataMove {
+      0% {
+        background-position: 0 0, 0 0;
+      }
+      100% {
+        background-position: 70px -70px, -70px 70px;
+      }
+    }
+
+    .stone {
+      position: relative;
+      width: min(430px, 72vw);
+      aspect-ratio: 0.8;
+      display: grid;
+      place-items: center;
+      padding: 52px 42px;
+      color: rgba(18, 18, 16, 0.78);
+      background:
+        linear-gradient(145deg, rgba(90, 96, 94, 0.18), rgba(2, 3, 3, 0.2)),
+        var(--story-stone-material) center / cover,
+        radial-gradient(circle at 22% 16%, rgba(174, 178, 169, 0.24), transparent 19%),
+        radial-gradient(circle at 74% 24%, rgba(25, 28, 27, 0.34), transparent 26%),
+        radial-gradient(circle at 30% 82%, rgba(128, 111, 88, 0.2), transparent 24%),
+        radial-gradient(circle at 88% 72%, rgba(8, 9, 9, 0.22), transparent 30%),
+        linear-gradient(146deg, #6f7775 0%, #4f5757 42%, #373d3e 72%, #2c302f 100%);
+      background-blend-mode: multiply, screen, normal, normal, normal, normal, normal;
+      clip-path: polygon(12% 6%, 28% 2%, 55% 5%, 77% 4%, 93% 19%, 96% 39%, 91% 61%, 88% 83%, 67% 97%, 43% 94%, 22% 92%, 7% 75%, 4% 54%, 9% 31%);
+      transition:
+        filter 0.6s ease,
+        transform 0.7s var(--ease);
+      cursor: default;
+      user-select: none;
+    }
+
+    .stone::before,
+    .stone::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      clip-path: inherit;
+    }
+
+    .stone::before {
+      opacity: 0.86;
+      background:
+        linear-gradient(112deg, transparent 0 13%, rgba(255, 255, 255, 0.08) 14%, transparent 18%),
+        linear-gradient(80deg, transparent 0 39%, rgba(10, 10, 10, 0.22) 41%, transparent 44%),
+        linear-gradient(31deg, transparent 0 63%, rgba(213, 196, 158, 0.08) 64%, transparent 68%),
+        radial-gradient(circle at 18% 38%, rgba(0, 0, 0, 0.18) 0 2px, transparent 3px),
+        radial-gradient(circle at 64% 18%, rgba(255, 255, 255, 0.07) 0 1px, transparent 2px),
+        radial-gradient(circle at 80% 72%, rgba(0, 0, 0, 0.2) 0 2px, transparent 4px);
+      background-size: auto, auto, auto, 34px 42px, 28px 35px, 44px 36px;
+      mix-blend-mode: multiply;
+    }
+
+    .stone::after {
+      opacity: 0;
+      background:
+        linear-gradient(90deg, transparent, rgba(120, 218, 238, 0.5), transparent),
+        linear-gradient(0deg, transparent, rgba(120, 218, 238, 0.26), transparent);
+      background-size: 90px 100%, 100% 90px;
+      transition: opacity 0.4s ease;
+      animation: dataMove 6s linear infinite;
+    }
+
+    .stone-text {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(10px, 1.4vw, 18px);
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      color: rgba(14, 14, 12, 0.68);
+      font-family: "CooperZhengKai", "KaiTi", "STKaiti", "Kaiti SC", "FangSong", "STFangsong", "Noto Serif SC", serif;
+      font-size: clamp(22px, 2.6vw, 40px);
+      font-weight: 500;
+      line-height: 1.15;
+      writing-mode: horizontal-tb;
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.07),
+        0 -1px 0 rgba(0, 0, 0, 0.34),
+        1px 0 0 rgba(0, 0, 0, 0.16);
+      mix-blend-mode: multiply;
+      filter: contrast(0.9) saturate(0.82);
+      transition: opacity 0.45s ease, filter 0.45s ease;
+      pointer-events: none;
+      cursor: default;
+      user-select: none;
+    }
+
+    .stone-text span {
+      display: block;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      letter-spacing: 0.14em;
+      opacity: 0.72;
+      cursor: default;
+      user-select: none;
+    }
+
+    .stone-text span:nth-child(2n) {
+      opacity: 0.62;
+      transform: translateY(2px);
+    }
+
+    .stone-text span:nth-child(3n) {
+      opacity: 0.78;
+      transform: translateY(-1px);
+    }
+
+    .story-page[data-era="han"] .stone {
+      filter: blur(0);
+      transform: rotate(-1deg) scale(1);
+    }
+
+    .story-page[data-era="han"] .stone::before,
+    .story-page[data-era="digital"] .stone::before {
+      opacity: 0.62;
+      background:
+        linear-gradient(112deg, transparent 0 13%, rgba(255, 255, 255, 0.08) 14%, transparent 18%),
+        linear-gradient(80deg, transparent 0 39%, rgba(10, 10, 10, 0.18) 41%, transparent 44%),
+        linear-gradient(31deg, transparent 0 63%, rgba(213, 196, 158, 0.08) 64%, transparent 68%);
+      background-size: auto;
+      mix-blend-mode: multiply;
+    }
+
+    .story-page[data-era="war"] .stone {
+      filter: saturate(0.86) brightness(0.72);
+      transform: rotate(4deg) scale(0.96);
+      clip-path: polygon(12% 4%, 47% 8%, 54% 23%, 78% 6%, 97% 24%, 86% 48%, 93% 86%, 64% 96%, 48% 76%, 26% 94%, 5% 74%, 18% 50%, 7% 22%);
+    }
+
+    .story-page[data-era="war"] .stone::before {
+      background:
+        linear-gradient(122deg, transparent 0 30%, rgba(43, 18, 18, 0.5) 31% 33%, transparent 34%),
+        radial-gradient(circle at 72% 28%, rgba(180, 60, 42, 0.34), transparent 36%);
+      opacity: 0.75;
+    }
+
+    .story-page[data-era="study"] .stone {
+      filter: blur(1.5px) saturate(0.86);
+      transform: rotate(-2deg) scale(0.98);
+    }
+
+    .story-page[data-era="study"] .stone::before {
+      background:
+        radial-gradient(circle at 18% 18%, rgba(177, 143, 93, 0.28), transparent 32%),
+        linear-gradient(160deg, rgba(184, 154, 103, 0.24), transparent 54%);
+      opacity: 0.8;
+    }
+
+    .story-page[data-era="digital"] .stone {
+      filter: saturate(0.8) brightness(0.9);
+      transform: rotate(1deg) scale(1.02);
+    }
+
+    .story-page[data-era="digital"] .stone::after {
+      opacity: 0.22;
+    }
+
+    .story-card {
+      min-height: 0;
+      max-width: 660px;
+      padding: 0;
+      color: rgba(35, 29, 22, 0.96);
+    }
+
+    .book-kicker {
+      margin-bottom: 10px;
+      color: var(--cinnabar);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+
+    .story-card h3 {
+      position: relative;
+      margin: 0 0 26px;
+      padding-bottom: 20px;
+      font-size: clamp(34px, 3.2vw, 48px);
+      line-height: 1.22;
+      font-weight: 600;
+      color: rgba(24, 22, 19, 0.98);
+    }
+
+    .story-card h3::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 46px;
+      height: 2px;
+      background: var(--cinnabar);
+    }
+
+    .story-card p {
+      margin: 0;
+      color: rgba(45, 36, 26, 0.8);
+      font-size: 18px;
+      line-height: 2.1;
+    }
+
+    .story-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 30px;
+      align-items: baseline;
+      margin: 32px 0 18px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      min-height: 0;
+      padding: 0;
+    }
+
+    .meta-pill + .meta-pill {
+      padding-left: 28px;
+      border-left: 1px solid rgba(44, 36, 27, 0.22);
+    }
+
+    .meta-pill span {
+      display: inline;
+      margin: 0;
+      color: rgba(44, 36, 27, 0.46);
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .story-page[data-era="war"] .meta-pill span,
+    .story-page[data-era="digital"] .meta-pill span {
+      color: rgba(248, 237, 213, 0.58);
+    }
+
+    .story-page[data-era="war"] .meta-pill + .meta-pill,
+    .story-page[data-era="digital"] .meta-pill + .meta-pill {
+      border-left-color: rgba(248, 237, 213, 0.26);
+    }
+
+    .story-page[data-era="war"] .story-card h3,
+    .story-page[data-era="digital"] .story-card h3 {
+      color: rgba(255, 252, 242, 0.98);
+    }
+
+    .story-page[data-era="war"] .story-card p,
+    .story-page[data-era="digital"] .story-card p {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .meta-pill strong {
+      color: rgba(34, 28, 22, 0.74);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .meta-pill:nth-child(2) strong {
+      color: rgba(180, 60, 42, 0.94);
+    }
+
+    .story-page[data-era="war"] .meta-pill strong,
+    .story-page[data-era="digital"] .meta-pill strong {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .story-page[data-era="war"] .meta-pill:nth-child(2) strong,
+    .story-page[data-era="digital"] .meta-pill:nth-child(2) strong {
+      color: rgba(248, 237, 213, 0.96);
+    }
+
+    .note-box {
+      margin-top: 16px;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      color: rgba(28, 23, 17, 0.95);
+      line-height: 2;
+      font-size: 18px;
+    }
+
+    .story-page[data-era="war"] .note-box,
+    .story-page[data-era="digital"] .note-box {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .story-controls {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 0;
+      align-items: start;
+      margin: 28px auto 0;
+      padding: 12px 28px 0;
+      max-width: 920px;
+    }
+
+    .story-controls::before {
+      content: "";
+      position: absolute;
+      top: 23px;
+      left: 54px;
+      right: 54px;
+      height: 1px;
+      background: rgba(44, 36, 27, 0.26);
+      z-index: 0;
+    }
+
+    .year-button {
+      position: relative;
+      z-index: 1;
+      min-height: 58px;
+      padding: 28px 8px 0;
+      border: 0;
+      border-radius: 0;
+      text-align: center;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .year-button:hover {
+      background: transparent;
+      transform: translateY(-1px);
+    }
+
+    .year-button::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(44, 36, 27, 0.22);
+      background: rgba(248, 237, 213, 0.96);
+      box-shadow: 0 0 0 4px rgba(248, 237, 213, 0.66);
+      transform: translateX(-50%);
+      transition: background 0.35s var(--ease), border-color 0.35s var(--ease), transform 0.35s var(--ease);
+    }
+
+    .year-button strong {
+      display: block;
+      color: rgba(44, 36, 27, 0.82);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .story-page[data-era="war"] .year-button,
+    .story-page[data-era="digital"] .year-button {
+      color: #fff;
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .story-page[data-era="war"] .story-controls::before,
+    .story-page[data-era="digital"] .story-controls::before {
+      background: rgba(248, 237, 213, 0.28);
+    }
+
+    .story-page[data-era="war"] .year-button strong,
+    .story-page[data-era="digital"] .year-button strong {
+      color: rgba(248, 237, 213, 0.86);
+    }
+
+    .year-button.active {
+      color: var(--cinnabar);
+      background: transparent;
+    }
+
+    .year-button.active::before {
+      border-color: rgba(180, 60, 42, 0.9);
+      background: var(--cinnabar);
+      transform: translateX(-50%) scale(1.12);
+    }
+
+    .year-button.active strong {
+      color: var(--cinnabar);
+    }
+
+    .story-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .story-actions:empty {
+      margin-top: 0;
+    }
+
+    .story-rub-button {
+      min-width: 226px;
+      padding-inline: 30px;
+      white-space: nowrap;
+      animation: actionFadeIn 0.38s ease both;
+    }
+
+    @keyframes actionFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .books-page {
+      background:
+        radial-gradient(circle at 82% 14%, rgba(180, 60, 42, 0.08), transparent 18%),
+        linear-gradient(180deg, rgba(248, 239, 220, 0.86), rgba(236, 214, 176, 0.72)),
+        var(--story-light-bg) center / cover;
+    }
+
+    .books-page .section-shell {
+      width: min(1700px, calc(100vw - 72px));
+    }
+
+    .books-page .section-title {
+      justify-content: flex-start;
+      align-items: center;
+      gap: 34px;
+      margin-bottom: 6px;
+      padding-left: clamp(92px, 7.4vw, 138px);
+    }
+
+    .books-page .section-title p {
+      max-width: none;
+      white-space: nowrap;
+      line-height: 1.5;
+    }
+
+    .books-board {
+      position: relative;
+      min-height: 360px;
+      padding: 34px 0 0;
+      overflow: visible;
+    }
+
+    .books-board::before {
+      content: "";
+      position: absolute;
+      left: 1.5%;
+      right: 1.5%;
+      top: 206px;
+      height: 30px;
+      border-radius: 2px 2px 16px 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 248, 229, 0.92), rgba(187, 146, 92, 0.64)),
+        linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.44), transparent);
+      box-shadow:
+        0 18px 36px rgba(92, 62, 33, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+
+    .books-board::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 236px;
+      height: 34px;
+      border-radius: 999px;
+      background: radial-gradient(ellipse at center, rgba(94, 67, 38, 0.18), transparent 64%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .books-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: clamp(16px, 2vw, 34px);
+      align-items: end;
+      min-height: 250px;
+      padding: 0 clamp(34px, 5vw, 86px);
+    }
+
+    .book-card {
+      --book-offset: 0px;
+      position: relative;
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      min-height: 220px;
+      padding: 0;
+      border-radius: 28px;
+      border: 0;
+      background: transparent;
+      transition: transform 0.55s var(--ease);
+      transform: translateY(var(--book-offset));
+      cursor: pointer;
+      overflow: visible;
+    }
+
+    .book-card:nth-child(1),
+    .book-card:nth-child(5) {
+      --book-offset: 12px;
+    }
+
+    .book-card:nth-child(2),
+    .book-card:nth-child(6) {
+      --book-offset: -10px;
+    }
+
+    .book-card:nth-child(3) {
+      --book-offset: 14px;
+    }
+
+    .book-card:nth-child(4) {
+      --book-offset: -16px;
+    }
+
+    .book-card:nth-child(7) {
+      --book-offset: 8px;
+    }
+
+    .book-card:nth-child(n):hover,
+    .book-card:nth-child(n).active {
+      transform: translateY(calc(var(--book-offset) - 18px)) scale(1.04);
+    }
+
+    .book-object {
+      position: relative;
+      display: grid;
+      place-items: end center;
+      width: clamp(84px, 6.6vw, 118px);
+      height: clamp(132px, 10.5vw, 186px);
+      filter: drop-shadow(0 18px 22px rgba(65, 42, 20, 0.2));
+    }
+
+    .book-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .book-detail {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 26px;
+      align-items: center;
+      min-height: 120px;
+      width: min(940px, 82vw);
+      margin: 24px auto 0;
+      padding: 20px 32px;
+      border-radius: 18px;
+      background: rgba(255, 248, 235, 0.78);
+      border: 1px solid rgba(255, 246, 222, 0.42);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 16px 42px rgba(42, 30, 20, 0.13);
+    }
+
+    .book-detail.is-hidden {
+      display: none;
+    }
+
+    .book-detail-title {
+      min-width: 0;
+      color: rgba(44, 36, 27, 0.88);
+      font-size: 34px;
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      text-align: center;
+      border-right: 1px solid rgba(44, 36, 27, 0.12);
+      padding-right: 24px;
+    }
+
+    .book-detail-title::after {
+      content: "";
+      display: block;
+      width: 34px;
+      height: 2px;
+      margin: 12px auto 0;
+      background: var(--cinnabar);
+    }
+
+    .book-detail-body {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .book-detail-quote {
+      margin: 0;
+      color: rgba(44, 36, 27, 0.82);
+      font-size: 20px;
+      line-height: 1.7;
+      font-weight: 600;
+    }
+
+    .book-detail-source {
+      margin-left: 12px;
+      color: rgba(44, 36, 27, 0.58);
+      font-size: 15px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .book-detail p {
+      margin: 0;
+      color: rgba(44, 36, 27, 0.74);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .accuracy-note {
+      margin: 18px auto 0;
+      max-width: 960px;
+      color: rgba(44, 36, 27, 0.58);
+      font-size: 16px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .rubbing-page {
+      background:
+        radial-gradient(circle at 24% 16%, rgba(217, 184, 120, 0.16), transparent 28%),
+        linear-gradient(180deg, rgba(8, 10, 12, 0.8), rgba(8, 10, 12, 0.9)),
+        var(--rubbing-texture) center / cover;
+      color: #f8edd5;
+      transition: opacity 0.52s ease, transform 0.52s var(--ease), background 0.55s ease;
+    }
+
+    .rubbing-page.reborn {
+      background:
+        radial-gradient(circle at 75% 20%, rgba(105, 188, 216, 0.18), transparent 32%),
+        linear-gradient(180deg, rgba(16, 22, 28, 0.88), rgba(42, 48, 56, 0.92)),
+        var(--rubbing-texture) center / cover;
+      color: #fff;
+      padding: 108px 36px 20px;
+    }
+
+    .rub-shell {
+      width: min(1200px, calc(100vw - 34px));
+      margin: 0 auto;
+      min-height: calc(100vh - 150px);
+      display: grid;
+      align-items: center;
+    }
+
+    .rubbing-page.reborn .rub-shell {
+      width: min(1540px, calc(100vw - 96px));
+      min-height: auto;
+      align-items: start;
+    }
+
+    .rub-step {
+      display: none;
+      animation: stepIn 0.5s var(--ease);
+    }
+
+    .rub-step.active {
+      display: block;
+    }
+
+    @keyframes stepIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .step-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .step-header h2 {
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: clamp(34px, 4.2vw, 68px);
+    }
+
+    .step-header p {
+      max-width: 520px;
+      margin: 0;
+      color: rgba(248, 237, 213, 0.76);
+      line-height: 1.8;
+    }
+
+    .sleep-layout .step-header {
+      width: min(920px, 92vw);
+      justify-content: center;
+    }
+
+    .sleep-layout .step-header p {
+      max-width: none;
+      white-space: nowrap;
+    }
+
+    .rubbing-page.reborn .step-header p {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .rubbing-page.reborn .step-header {
+      margin-bottom: 14px;
+    }
+
+    .rubbing-page.reborn .rub-step[data-step="3"] .step-header > div {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+
+    .rubbing-page.reborn .step-header h2 {
+      font-size: clamp(42px, 3.5vw, 62px);
+      line-height: 1;
+    }
+
+    .rubbing-page.reborn .rub-step[data-step="3"] .step-header p {
+      margin: 0 0 7px;
+      max-width: none;
+      white-space: nowrap;
+    }
+
+    .step-controls {
+      position: fixed;
+      top: 50%;
+      left: 26px;
+      right: 26px;
+      z-index: 16;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      transform: translateY(-50%);
+    }
+
+    .round-button {
+      pointer-events: auto;
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      color: #1a1a1a;
+      font-weight: 800;
+    }
+
+    .round-button.complete {
+      width: auto;
+      min-width: 82px;
+      padding: 0 18px;
+      border-radius: 999px;
+    }
+
+    .round-button.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sleep-layout {
+      display: grid;
+      place-items: center;
+      gap: 18px;
+      min-height: 64vh;
+      text-align: center;
+    }
+
+    .big-stone-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(530px, 82vw);
+      aspect-ratio: 1;
+    }
+
+    .particle {
+      position: absolute;
+      z-index: 1;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 999px;
+      background: var(--color);
+      opacity: var(--alpha);
+      transform: rotate(var(--angle)) translateX(var(--distance));
+      animation: drift var(--duration) ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from {
+        transform: rotate(var(--angle)) translateX(var(--distance)) translateY(-4px);
+      }
+      to {
+        transform: rotate(calc(var(--angle) + 10deg)) translateX(calc(var(--distance) + 8px)) translateY(8px);
+      }
+    }
+
+    .big-stone {
+      position: relative;
+      z-index: 2;
+      width: min(420px, 72vw);
+      aspect-ratio: 0.9;
+      display: grid;
+      place-items: center;
+      padding: 56px 40px;
+      color: rgba(18, 18, 16, 0.64);
+      background:
+        linear-gradient(145deg, rgba(108, 116, 114, 0.42), rgba(25, 27, 27, 0.34)),
+        var(--stone-material) center / cover,
+        radial-gradient(circle at 24% 18%, rgba(174, 178, 169, 0.22), transparent 22%),
+        radial-gradient(circle at 76% 74%, rgba(20, 21, 20, 0.32), transparent 30%),
+        radial-gradient(circle at 35% 82%, rgba(126, 105, 78, 0.18), transparent 24%),
+        linear-gradient(145deg, #6b7472, #4e5656 54%, #303534);
+      background-blend-mode: soft-light, screen, normal, normal, normal, normal;
+      clip-path: polygon(14% 5%, 31% 1%, 58% 4%, 78% 6%, 95% 28%, 91% 82%, 67% 96%, 43% 94%, 21% 91%, 5% 68%, 8% 21%);
+      cursor: default;
+      overflow: hidden;
+      user-select: none;
+      transition: transform 0.6s var(--ease), filter 0.5s ease;
+    }
+
+    .big-stone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      clip-path: inherit;
+      opacity: 0.58;
+      background:
+        linear-gradient(105deg, transparent 0 18%, rgba(255, 255, 255, 0.07) 19%, transparent 23%),
+        linear-gradient(78deg, transparent 0 48%, rgba(8, 8, 8, 0.16) 49%, transparent 53%);
+      background-size: auto, auto;
+      mix-blend-mode: multiply;
+    }
+
+    .sleeping-text {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(14px, 2.4vw, 28px);
+      width: 100%;
+      height: 100%;
+      color: rgba(14, 14, 12, 0.68);
+      writing-mode: horizontal-tb;
+      font-family: "CooperZhengKai", "KaiTi", "STKaiti", "Kaiti SC", "FangSong", "STFangsong", "Noto Serif SC", serif;
+      font-size: clamp(26px, 4.5vw, 58px);
+      font-weight: 500;
+      line-height: 1.15;
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.06),
+        0 -1px 0 rgba(0, 0, 0, 0.34),
+        1px 0 0 rgba(0, 0, 0, 0.16);
+      mix-blend-mode: multiply;
+      filter: blur(3.2px) contrast(0.9) saturate(0.82);
+      opacity: 0.5;
+      cursor: default;
+      user-select: none;
+    }
+
+    .sleeping-text span {
+      display: block;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      letter-spacing: 0.14em;
+      opacity: 0.72;
+    }
+
+    .sleeping-text span:nth-child(2n) {
+      opacity: 0.58;
+      transform: translateY(2px);
+    }
+
+    .sleeping-text span:nth-child(3n) {
+      opacity: 0.76;
+      transform: translateY(-1px);
+    }
+
+    .sleep-caption {
+      margin: 0;
+      color: rgba(248, 237, 213, 0.68);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .canvas-layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 1fr) 310px;
+      gap: 24px;
+      align-items: stretch;
+      min-height: 570px;
+    }
+
+    .canvas-card,
+    .tools-panel,
+    .timeline-card,
+    .rebirth-card {
+      border-radius: 34px;
+      border: 1px solid rgba(255, 246, 222, 0.34);
+      background: rgba(248, 237, 213, 0.76);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.22);
+    }
+
+    .canvas-card {
+      position: relative;
+      min-height: 570px;
+      overflow: hidden;
+    }
+
+    #rubbingCanvas {
+      width: 100%;
+      height: 100%;
+      min-height: 570px;
+      display: block;
+      touch-action: none;
+      cursor: default;
+    }
+
+    #rubbingCanvas[data-tool="clean"] {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cg transform='rotate(-35 14 14)'%3E%3Crect x='11' y='3' width='6' height='14' rx='2' fill='%238b5f3d'/%3E%3Crect x='9' y='15' width='10' height='5' rx='2' fill='%23d5b477'/%3E%3Cpath d='M8 19h12l-2 5H10z' fill='%232c241b'/%3E%3Cpath d='M10 24h2M14 24h2M18 24h2' stroke='%232c241b' stroke-width='1.4' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 8 24, auto;
+    }
+
+    #rubbingCanvas[data-tool="paper"] {
+      cursor: ew-resize;
+    }
+
+    #rubbingCanvas[data-tool="ink"] {
+      cursor: pointer;
+    }
+
+    .canvas-hint {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 16px;
+      border-radius: 20px;
+      color: rgba(44, 36, 27, 0.72);
+      background: rgba(255, 255, 255, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(12px);
+      font-size: 14px;
+    }
+
+    .tools-panel {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tool-table-label {
+      display: grid;
+      gap: 4px;
+      color: rgba(44, 36, 27, 0.68);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tool-table-label strong {
+      color: rgba(44, 36, 27, 0.88);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .tool-button {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: center;
+      min-height: 72px;
+      padding: 14px;
+      border-radius: 22px;
+      text-align: left;
+      color: #1a1a1a;
+    }
+
+    .tool-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      filter: grayscale(0.7);
+    }
+
+    .tool-button.active {
+      color: #fff;
+      background: rgba(180, 60, 42, 0.86);
+      border-color: rgba(180, 60, 42, 0.42);
+    }
+
+    .tool-index {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.28);
+      font-weight: 700;
+    }
+
+    .tool-copy,
+    .tool-copy strong,
+    .tool-copy span {
+      display: block;
+    }
+
+    .tool-copy span {
+      margin-top: 4px;
+      color: rgba(44, 36, 27, 0.58);
+      font-size: 12px;
+    }
+
+    .tool-button.active .tool-copy span {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .rubbing-state {
+      margin-top: 4px;
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.24);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: rgba(44, 36, 27, 0.72);
+      min-height: 60px;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .inline-action {
+      margin-top: auto;
+      width: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.35s ease, transform 0.45s var(--ease);
+    }
+
+    .inline-action.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .timeline-card {
+      padding: clamp(22px, 4vw, 42px);
+      min-height: 440px;
+    }
+
+    .timeline-title {
+      margin: 0 0 34px;
+      text-align: center;
+      color: var(--ink);
+      font-size: clamp(28px, 3.4vw, 48px);
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding-top: 48px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 72px;
+      left: 9%;
+      right: 9%;
+      height: 2px;
+      background: rgba(44, 36, 27, 0.18);
+    }
+
+    .time-node {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+      opacity: 0.35;
+      transform: translateY(12px) scale(0.98);
+      transition: opacity 0.45s ease, transform 0.55s var(--ease);
+    }
+
+    .time-node.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .time-dot {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: rgba(180, 60, 42, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 40px rgba(120, 80, 60, 0.12);
+      font-weight: 700;
+    }
+
+    .time-node:last-child.active .time-dot {
+      animation: pulseDot 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot {
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(180, 60, 42, 0.28), 0 8px 40px rgba(120, 80, 60, 0.12);
+      }
+      50% {
+        box-shadow: 0 0 0 12px rgba(180, 60, 42, 0), 0 8px 40px rgba(120, 80, 60, 0.12);
+      }
+    }
+
+    .time-node strong {
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .time-node span {
+      max-width: 160px;
+      color: rgba(44, 36, 27, 0.62);
+      font-size: 13px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .rebirth-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(520px, 0.92fr);
+      gap: clamp(28px, 2.8vw, 44px);
+      align-items: stretch;
+    }
+
+    .demo-note {
+      margin: 14px auto 0;
+      max-width: 860px;
+      color: rgba(255, 255, 255, 0.42);
+      font-size: 12px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .rebirth-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+      min-height: 500px;
+      padding: clamp(26px, 2.6vw, 36px) clamp(28px, 3vw, 42px) 74px;
+      color: #fff;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.07)),
+        radial-gradient(circle at 16% 92%, rgba(217, 184, 120, 0.12), transparent 34%);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.18);
+    }
+
+    .rebirth-card h3 {
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: clamp(24px, 1.85vw, 32px);
+    }
+
+    .rebirth-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .switch-passage {
+      position: absolute;
+      right: clamp(24px, 3vw, 40px);
+      bottom: 24px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: rgba(255, 255, 255, 0.84);
+      background: rgba(255, 255, 255, 0.11);
+      font-size: 15px;
+      cursor: pointer;
+      transition: opacity 0.24s ease, background 0.24s ease, transform 0.24s ease;
+    }
+
+    .switch-passage:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .passage-title,
+    .classic-text {
+      transition: opacity 0.24s ease;
+    }
+
+    .passage-title {
+      min-height: 88px;
+      max-height: 88px;
+      overflow: hidden;
+      line-height: 1.35;
+    }
+
+    .rebirth-card.is-switching .passage-title,
+    .rebirth-card.is-switching .classic-text {
+      opacity: 0.18;
+    }
+
+    .classic-text {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      flex: 1;
+      min-height: 0;
+      margin-top: 16px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .text-panel {
+      min-height: 0;
+      max-height: 268px;
+      padding: 4px 22px 0 0;
+      overflow-y: auto;
+    }
+
+    .text-panel + .text-panel {
+      padding-left: 26px;
+      border-left: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .text-panel h3 {
+      margin-bottom: 18px;
+      color: #f4c8bf;
+      font-size: 18px;
+    }
+
+    .text-panel h3::after {
+      content: "";
+      display: block;
+      width: 34px;
+      height: 2px;
+      margin-top: 8px;
+      background: var(--cinnabar);
+    }
+
+    .text-panel p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 2;
+      font-size: 16px;
+      white-space: pre-line;
+    }
+
+    .signature-panel {
+      display: grid;
+      grid-template-rows: auto 78px 50px minmax(0, 1fr);
+      gap: 10px;
+      height: 500px;
+      padding-left: clamp(18px, 3vw, 36px);
+      border-left: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .signature-panel > p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.76);
+      line-height: 1.75;
+    }
+
+    .signature-panel textarea {
+      min-height: 0;
+      resize: none;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 10px;
+      outline: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      overflow-y: auto;
+    }
+
+    .signature-panel textarea::placeholder {
+      color: rgba(255, 255, 255, 0.56);
+    }
+
+    .final-card {
+      display: none;
+      position: relative;
+      min-height: 0;
+      height: 100%;
+      margin-top: 2px;
+      padding: 18px 24px 16px;
+      color: var(--brown);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(180, 60, 42, 0.08), transparent 10%, transparent 90%, rgba(180, 60, 42, 0.06)),
+        radial-gradient(circle at 22% 24%, rgba(80, 64, 43, 0.08), transparent 28%),
+        radial-gradient(circle at 76% 70%, rgba(217, 184, 120, 0.14), transparent 34%),
+        #fff8eb;
+      border: 1px solid rgba(172, 137, 86, 0.34);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+    }
+
+    .final-card::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px solid rgba(172, 137, 86, 0.24);
+      pointer-events: none;
+    }
+
+    .final-card.show {
+      display: flex;
+      flex-direction: column;
+      animation: stepIn 0.5s var(--ease);
+    }
+
+    .final-card h3 {
+      margin: 0 0 8px;
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: 25px;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .final-card .classic {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: 20px;
+      line-height: 1.28;
+    }
+
+    .final-card .translation,
+    .final-card .caption {
+      color: rgba(44, 36, 27, 0.68);
+      line-height: 1.5;
+      font-size: 12px;
+    }
+
+    .final-card .translation {
+      margin: 8px 0 0;
+    }
+
+    .final-card .caption {
+      margin: auto 0 0;
+      padding-right: 52px;
+    }
+
+    .inscription {
+      margin: 8px 0;
+      padding: 8px 0;
+      color: var(--cinnabar);
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: clamp(17px, 1.15vw, 20px);
+      line-height: 1.32;
+      border-top: 1px solid rgba(44, 36, 27, 0.12);
+      border-bottom: 1px solid rgba(44, 36, 27, 0.12);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-height: none;
+      overflow: visible;
+    }
+
+    .red-seal {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin: 0 10px 4px auto;
+      border: 2px solid rgba(180, 60, 42, 0.9);
+      color: var(--cinnabar);
+      font-family: "Ma Shan Zheng", "Noto Serif SC", serif;
+      font-size: 20px;
+    }
+
+    .rubbing-page.reborn .round-button {
+      opacity: 0.22;
+    }
+
+    .rubbing-page.reborn .round-button:hover {
+      opacity: 0.5;
+    }
+
+    @media (max-width: 980px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .page {
+        position: relative;
+        min-height: 100vh;
+        padding: 104px 18px 32px;
+        display: none;
+        overflow: visible;
+      }
+
+      .page.active {
+        display: grid;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        gap: 10px;
+        flex-direction: column;
+        top: 12px;
+        min-height: auto;
+        border-radius: 24px;
+      }
+
+      .nav {
+        width: 100%;
+      }
+
+      .nav button {
+        flex: 1 1 92px;
+        padding: 9px 10px;
+      }
+
+      .cover {
+        position: absolute;
+        min-height: 100vh;
+      }
+
+      .cover-content {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        min-height: auto;
+        text-align: center;
+        transform: none;
+      }
+
+      .cover-text .concept {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cover-content::before {
+        width: min(260px, 56vw);
+      }
+
+      .red-line {
+        margin-left: auto;
+        margin-right: auto;
+        background: linear-gradient(90deg, transparent, var(--cinnabar), transparent);
+      }
+
+      .cover-entry {
+        position: relative;
+        bottom: auto;
+        justify-content: center;
+        margin-top: 28px;
+      }
+
+      .section-title,
+      .step-header {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .story-layout,
+      .canvas-layout,
+      .rebirth-grid,
+      .classic-text {
+        grid-template-columns: 1fr;
+      }
+
+      .rubbing-page.reborn {
+        padding: 104px 18px 32px;
+      }
+
+      .rubbing-page.reborn .rub-shell {
+        width: min(100%, calc(100vw - 36px));
+      }
+
+      .rebirth-card,
+      .signature-panel {
+        height: auto;
+      }
+
+      .rubbing-page.reborn .rub-step[data-step="3"] .step-header > div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .rubbing-page.reborn .rub-step[data-step="3"] .step-header p {
+        margin: 0;
+        white-space: normal;
+      }
+
+      .rebirth-card {
+        min-height: 0;
+        padding-bottom: 84px;
+      }
+
+      .passage-title {
+        min-height: 0;
+        max-height: none;
+      }
+
+      .text-panel {
+        max-height: none;
+        overflow: visible;
+      }
+
+      .signature-panel {
+        grid-template-rows: auto 104px 54px auto;
+      }
+
+      .final-card {
+        height: auto;
+      }
+
+      .signature-panel {
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .text-panel + .text-panel {
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .story-controls {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .story-card {
+        min-height: auto;
+      }
+
+      .story-meta {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .meta-pill + .meta-pill {
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .books-board {
+        min-height: auto;
+        padding-top: 24px;
+      }
+
+      .books-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        min-height: auto;
+        row-gap: 24px;
+        padding: 0 18px 12px;
+      }
+
+      .book-card,
+      .book-card:nth-child(n),
+      .book-card:nth-child(n):hover,
+      .book-card:nth-child(n).active {
+        min-height: 320px;
+        transform: none;
+      }
+
+      .books-board::before {
+        left: 6%;
+        right: 6%;
+        top: 236px;
+      }
+
+      .books-board::after {
+        top: 266px;
+      }
+
+      .book-detail {
+        grid-template-columns: 1fr;
+        width: min(720px, 92vw);
+        margin-top: 26px;
+        padding: 22px;
+      }
+
+      .book-detail-title {
+        border-right: 0;
+        border-bottom: 1px solid rgba(44, 36, 27, 0.12);
+        padding: 0 0 14px;
+      }
+
+      .book-detail-source {
+        display: block;
+        margin: 4px 0 0;
+        white-space: normal;
+      }
+
+      .accuracy-note {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        margin-top: 16px;
+      }
+
+      .canvas-card,
+      #rubbingCanvas {
+        min-height: 460px;
+      }
+
+      .step-controls {
+        top: auto;
+        bottom: 18px;
+        left: 18px;
+        right: 18px;
+        transform: none;
+      }
+
+      .timeline {
+        grid-template-columns: 1fr;
+        padding-top: 0;
+      }
+
+      .timeline::before {
+        top: 0;
+        bottom: 0;
+        left: 26px;
+        right: auto;
+        width: 2px;
+        height: auto;
+      }
+
+      .time-node {
+        grid-template-columns: 52px 1fr;
+        justify-items: start;
+        text-align: left;
+      }
+
+      .time-node strong,
+      .time-node span {
+        text-align: left;
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .cover h1 {
+        font-size: 52px;
+      }
+
+      .story-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .books-grid {
+        grid-template-columns: repeat(2, minmax(118px, 1fr));
+        gap: 14px;
+      }
+
+      .book-card,
+      .book-card:nth-child(n) {
+        min-height: 198px;
+      }
+
+      .books-board::before,
+      .books-board::after {
+        display: none;
+      }
+
+      .book-object {
+        width: 117px;
+        height: 204px;
+      }
+
+      .book-detail {
+        width: 100%;
+        padding: 20px;
+      }
+
+      .book-detail-quote {
+        font-size: 18px;
+      }
+
+      .canvas-hint {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header id="topbar" class="topbar hidden">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>熹平石经</span>
+      </div>
+      <nav class="nav" aria-label="页面导航">
+        <button type="button" data-nav="story">石经故事</button>
+        <button type="button" data-nav="rubbing">传拓体验</button>
+        <button type="button" data-nav="books">七经典籍</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="cover" class="page cover active" aria-label="封面">
+        <div class="cover-content">
+          <div class="cover-text">
+            <h1><span>石上经文</span><span>指尖千年</span></h1>
+            <p class="subtitle">熹平石经传拓与数字重生 · 一次石上文字的唤醒</p>
+            <div class="red-line"></div>
+            <p class="concept">一部典籍的生命史：校定、刊刻、摹写、散佚、出土、研究与数字再生。</p>
+            <div class="cover-entry">
+              <p class="cover-note">千年之后，石头还记得。</p>
+              <button class="glass-button primary" type="button" data-go="story">进入石经故事</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="story" class="page story-page" data-era="han" aria-label="石经故事">
+        <div class="section-shell">
+          <div class="section-title">
+            <h2>一块残石的四段旅程</h2>
+          </div>
+          <div class="story-layout">
+            <div class="stone-stage" aria-hidden="true">
+              <div class="architecture"></div>
+              <div class="embers"></div>
+              <div class="mountain-wash"></div>
+              <div class="data-lines"></div>
+              <div class="stone">
+                <div class="stone-text">
+                  <span>学而时习之</span>
+                  <span>不亦说乎</span>
+                  <span>有朋自远方来</span>
+                  <span>不亦乐乎</span>
+                  <span>人不知而不愠</span>
+                  <span>不亦君子乎</span>
+                </div>
+              </div>
+            </div>
+
+            <article class="story-card">
+              <h3 id="storyTitle">立石太学，校定经文</h3>
+              <p id="storyText">东汉灵帝熹平四年，也就是公元175年，蔡邕、杨赐、马日磾等人奏请校定儒家经本文字。工程至光和六年，即公元183年完成。七种经典被刻在四十六座石碑上，立于洛阳太学一带，供士人校读、摹写。</p>
+              <div class="story-meta">
+                <div class="meta-pill">
+                  <span>关键词：</span>
+                  <strong id="storyKey">校定、刊刻、太学</strong>
+                </div>
+                <div class="meta-pill">
+                  <span>学习提示：</span>
+                  <strong id="storyPrompt">为什么要把经典刻在石头上？</strong>
+                </div>
+              </div>
+              <div class="note-box" id="storyNote">纸会抄错，口耳会传误。把经文刻在石上，是东汉给天下读书人立下的一处共同参照：从此，争论文字时，人们可以回到石碑前。</div>
+              <div class="story-actions" id="storyActions"></div>
+            </article>
+          </div>
+
+          <div class="story-controls" aria-label="年代切换">
+            <button class="year-button active" type="button" data-era="han">
+              <strong>东汉立石</strong>
+            </button>
+            <button class="year-button" type="button" data-era="war">
+              <strong>魏晋散佚</strong>
+            </button>
+            <button class="year-button" type="button" data-era="study">
+              <strong>唐宋出土</strong>
+            </button>
+            <button class="year-button" type="button" data-era="digital">
+              <strong>今日重生</strong>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="books" class="page books-page" aria-label="七经典籍">
+        <div class="section-shell">
+          <div class="section-title">
+            <h2>七经陈列</h2>
+            <p>七部经典曾被刻上石碑，成为东汉学者共同仰望的文字。悬停或点击任一本书，体悟它为什么能流传千年</p>
+          </div>
+          <div class="books-board">
+            <div class="books-grid" id="booksGrid"></div>
+            <div class="book-detail is-hidden" id="bookDetail" aria-live="polite"></div>
+          </div>
+          <p class="accuracy-note">展陈说明：本页选取通行文本与相关传文作展示。熹平石经今多为残石，眼前所见，是一次面向课堂的数字复原与理解入口。</p>
+        </div>
+      </section>
+
+      <section id="rubbing" class="page rubbing-page" aria-label="传拓体验">
+        <div class="step-controls" aria-label="传拓步骤切换">
+          <button class="round-button hidden" type="button" id="prevStep">上</button>
+          <button class="round-button" type="button" id="nextStep">下</button>
+        </div>
+
+        <div class="rub-shell">
+          <section class="rub-step active" data-step="0">
+            <div class="sleep-layout">
+            <div class="step-header">
+              <div>
+                <h2>残石沉睡</h2>
+              </div>
+                <p class="sleep-intro">先观察一块尚未被清理的残石。文字存在，但被尘土、风化和时间遮住了。</p>
+              </div>
+              <div class="big-stone-wrap" id="particleWrap">
+                <div class="big-stone">
+                  <div class="sleeping-text">
+                    <span>学而时习之</span>
+                    <span>不亦说乎</span>
+                    <span>有朋自远方来</span>
+                    <span>不亦乐乎</span>
+                    <span>人不知而不愠</span>
+                    <span>不亦君子乎</span>
+                  </div>
+                </div>
+              </div>
+              <p class="sleep-caption">公元175年开始校定刊刻，后来经历损毁、散佚与重新发现。现在，请从“清碑”开始唤醒它。</p>
+              <button class="glass-button primary" type="button" id="startRubbing">开始唤醒</button>
+            </div>
+          </section>
+
+          <section class="rub-step" data-step="1">
+            <div class="step-header">
+              <div>
+                <h2>指尖传拓</h2>
+              </div>
+            </div>
+            <div class="canvas-layout">
+              <div class="canvas-card">
+                <canvas id="rubbingCanvas" width="900" height="640" aria-label="虚拟传拓画布"></canvas>
+                <div class="canvas-hint">
+                  <span id="canvasHint">请选择“清碑刷”，按住并移动来清除尘土。</span>
+                  <span id="quoteReveal">经文尚未显现</span>
+                </div>
+              </div>
+              <aside class="tools-panel">
+                <div class="tool-table-label">
+                  <strong>工具台</strong>
+                  <span>依次取用工具，观察文字如何从石面显现。</span>
+                </div>
+                <button class="tool-button active" type="button" data-tool="clean">
+                  <span class="tool-index">刷</span>
+                  <span class="tool-copy"><strong>清碑刷</strong><span>拂去石面浮尘</span></span>
+                </button>
+                <button class="tool-button" type="button" data-tool="paper" disabled>
+                  <span class="tool-index">纸</span>
+                  <span class="tool-copy"><strong>宣纸</strong><span>覆纸贴合刻痕</span></span>
+                </button>
+                <button class="tool-button" type="button" data-tool="ink" disabled>
+                  <span class="tool-index">拓</span>
+                  <span class="tool-copy"><strong>拓包</strong><span>轻拍显出文字</span></span>
+                </button>
+
+                <div class="rubbing-state" id="rubStatus">请先用清碑刷拂去石面尘土。</div>
+                <button class="glass-button primary inline-action" type="button" id="toTimeline">让拓片继续流转</button>
+              </aside>
+            </div>
+          </section>
+
+          <section class="rub-step" data-step="2">
+            <div class="step-header">
+              <div>
+                <h2>流转时间轴</h2>
+              </div>
+              <p>传拓不是终点。石经从太学走向残石、拓片、著录和数字档案，每一步都改变了它被看见的方式。</p>
+            </div>
+            <div class="timeline-card">
+              <p class="timeline-title">一千八百余年，文字仍在路上。</p>
+              <div class="timeline" id="timeline">
+                <div class="time-node">
+                  <div class="time-dot">一</div>
+                  <div>
+                    <strong>175年始刻</strong>
+                    <span>东汉官方启动经文校定与刊刻。</span>
+                  </div>
+                </div>
+                <div class="time-node">
+                  <div class="time-dot">二</div>
+                  <div>
+                    <strong>太学摹写</strong>
+                    <span>士人观看、校读、摹写，形成传播。</span>
+                  </div>
+                </div>
+                <div class="time-node">
+                  <div class="time-dot">三</div>
+                  <div>
+                    <strong>战火散佚</strong>
+                    <span>石碑损毁迁徙，完整文本成为残片。</span>
+                  </div>
+                </div>
+                <div class="time-node">
+                  <div class="time-dot">四</div>
+                  <div>
+                    <strong>出土著录</strong>
+                    <span>残石与拓本被记录、收藏和研究。</span>
+                  </div>
+                </div>
+                <div class="time-node">
+                  <div class="time-dot">五</div>
+                  <div>
+                    <strong>数字再生</strong>
+                    <span>高清影像、三维扫描和数据库继续保存信息。</span>
+                  </div>
+                </div>
+              </div>
+              <div style="text-align:center; margin-top: 38px;">
+                <button class="glass-button primary" type="button" id="toRebirth">进入数字重生</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="rub-step" data-step="3">
+            <div class="step-header">
+              <div>
+                <h2>数字重生</h2>
+                <p>让石刻文字在数字世界中再次阅读、理解与回应。</p>
+              </div>
+            </div>
+            <div class="rebirth-grid">
+              <article class="rebirth-card" id="rebirthCard">
+                <div class="rebirth-card-head">
+                  <div class="book-kicker">经文示例</div>
+                  <button class="switch-passage" type="button" id="switchPassage">切换经文</button>
+                </div>
+                <h3 class="passage-title" id="passageTitle">《论语·学而》节选</h3>
+                <div class="classic-text">
+                  <div class="text-panel">
+                    <h3>原文</h3>
+                    <p id="passageOriginal">学而时习之，不亦说乎？
+有朋自远方来，不亦乐乎？
+人不知而不愠，不亦君子乎？</p>
+                  </div>
+                  <div class="text-panel">
+                    <h3>译文</h3>
+                    <p id="passageTranslation">学习之后经常温习，不也是令人愉快的吗？
+有朋友从远方来，不也是快乐的吗？
+别人不了解自己而不怨恨，不也是君子的修养吗？</p>
+                  </div>
+                </div>
+              </article>
+              <aside class="signature-panel">
+                <p>刚才显现的文字，曾经属于石碑、拓片与书卷。现在，请为它写下一句属于今天的回应。</p>
+                <textarea id="inscriptionInput" maxlength="60" placeholder="写下你的题跋……"></textarea>
+                <button class="glass-button primary" type="button" id="makeCard">落款成笺</button>
+                <div class="final-card" id="finalCard">
+                  <h3>我与石经的一次相遇</h3>
+                  <p class="classic" id="cardClassic">学而时习之，不亦说乎？</p>
+                  <p class="translation" id="cardTranslation">文字被刻在石上，也被一次次重新读懂。</p>
+                  <div class="inscription" id="inscriptionText">愿在石头的沉默里，听见文字的回声。</div>
+                  <div class="red-seal">藏</div>
+                  <p class="caption">长按或截图保存这次相遇。你的题跋已收入今日的数字档案。</p>
+                </div>
+              </aside>
+            </div>
+            <p class="demo-note">演示说明：后续会继续加入更多经文，让不同残石在课堂中被一次次重新读起。</p>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <audio id="bgMusic" preload="auto" loop src="assets/xiping-background-music.mp3"></audio>
+  <button class="music-toggle is-paused" id="musicToggle" type="button" aria-label="播放背景音乐" title="背景音乐">
+    <span class="xun-icon" aria-hidden="true"></span>
+  </button>
+
+  <script>
+    const pages = [...document.querySelectorAll(".page")];
+    const topbar = document.getElementById("topbar");
+    const navButtons = [...document.querySelectorAll("[data-nav]")];
+    const goButtons = [...document.querySelectorAll("[data-go]")];
+
+    function showPage(pageId) {
+      pages.forEach((page) => page.classList.toggle("active", page.id === pageId));
+      topbar.classList.toggle("hidden", pageId === "cover");
+      navButtons.forEach((button) => button.classList.toggle("active", button.dataset.nav === pageId));
+      if (pageId === "rubbing") {
+        resizeCanvas();
+        updateStep();
+      }
+    }
+
+    navButtons.forEach((button) => {
+      button.addEventListener("click", () => showPage(button.dataset.nav));
+    });
+
+    goButtons.forEach((button) => {
+      button.addEventListener("click", () => showPage(button.dataset.go));
+    });
+
+    const bgMusic = document.getElementById("bgMusic");
+    const musicToggle = document.getElementById("musicToggle");
+    let musicUnavailable = false;
+    let musicGestureArmed = false;
+
+    function syncMusicButton() {
+      if (!musicToggle || !bgMusic) return;
+      const isPlaying = !bgMusic.paused && !musicUnavailable;
+      musicToggle.classList.toggle("is-paused", !isPlaying);
+      musicToggle.setAttribute("aria-label", isPlaying ? "暂停背景音乐" : "播放背景音乐");
+    }
+
+    function playMusic() {
+      if (!bgMusic || musicUnavailable) return Promise.resolve(false);
+      bgMusic.volume = 0.12;
+      bgMusic.loop = true;
+      const playTask = bgMusic.play();
+      if (!playTask) {
+        syncMusicButton();
+        return Promise.resolve(true);
+      }
+      return playTask
+        .then(() => {
+          syncMusicButton();
+          return true;
+        })
+        .catch(() => {
+          syncMusicButton();
+          armMusicAfterGesture();
+          return false;
+        });
+    }
+
+    function armMusicAfterGesture() {
+      if (musicGestureArmed || !bgMusic || musicUnavailable) return;
+      musicGestureArmed = true;
+      const unlockMusic = () => {
+        playMusic().then((played) => {
+          if (played) {
+            document.removeEventListener("pointerdown", unlockMusic);
+            document.removeEventListener("keydown", unlockMusic);
+          }
+        });
+      };
+      document.addEventListener("pointerdown", unlockMusic);
+      document.addEventListener("keydown", unlockMusic);
+    }
+
+    if (bgMusic && musicToggle) {
+      bgMusic.volume = 0.12;
+      bgMusic.loop = true;
+      bgMusic.addEventListener("error", () => {
+        musicUnavailable = true;
+        musicToggle.hidden = true;
+      });
+      bgMusic.addEventListener("play", syncMusicButton);
+      bgMusic.addEventListener("pause", syncMusicButton);
+      musicToggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (musicUnavailable) return;
+        if (bgMusic.paused) {
+          playMusic();
+        } else {
+          bgMusic.pause();
+          syncMusicButton();
+        }
+      });
+      playMusic();
+    }
+
+    const storyData = {
+      han: {
+        title: "立石太学，校定经文",
+        text: "东汉灵帝熹平四年，也就是公元175年，蔡邕、杨赐、马日磾等人奏请校定儒家经本文字。工程至光和六年，即公元183年完成。七种经典被刻在四十六座石碑上，立于洛阳太学一带，供士人校读、摹写。",
+        key: "校定、刊刻、太学",
+        prompt: "为什么要把经典刻在石头上？",
+        note: "纸会抄错，口耳会传误。把经文刻在石上，是东汉给天下读书人立下的一处共同参照：从此，争论文字时，人们可以回到石碑前。"
+      },
+      war: {
+        title: "兵火之后，完整变成残片",
+        text: "洛阳的动荡改变了石经的命运。曾经整齐排列的石碑，在战火、迁徙和再利用中破裂、散落，许多文字从此只剩下残缺的笔画。",
+        key: "损毁、迁徙、散佚",
+        prompt: "文物为什么会留下残片？",
+        note: "文物很少完整穿过历史。战火、搬迁、再利用和自然风化，都会让它破碎、散失。但这反而告诉我们：这部经典曾经真实地站在太学门前，也真实地经历过时代的冲击。"
+      },
+      study: {
+        title: "出土著录，残字进入学术视野",
+        text: "宋代以后，熹平石经残石与拓本陆续被著录。清代金石学兴盛，学者不断访碑、考字。1922年以后，洛阳太学旧址附近出土多件残石，推动了现代石经研究。",
+        key: "出土 · 拓本 · 考证",
+        prompt: "为什么出土会改变一部典籍的命运？",
+        note: "当残石出土，石上的文字也重新醒来。学者借助拓片辨认字形、校对古书、追索旧本，让沉睡多年的文字再次参与后来的阅读与研究。"
+      },
+      digital: {
+        title: "今日重生，石头有了新的读法",
+        text: "今天，高清影像、三维扫描和数字建档，让残石的纹理、裂痕与刻痕被更细致地保存。真实的石头仍在原处，而它的文字开始以新的方式被更多人看见。",
+        key: "影像、建模、数据库",
+        prompt: "数字化是在替代文物吗？",
+        note: "数字化不是替代文物，而是为文物打开新的阅读路径。石头保存了刻痕，影像保存了细节，而今天的读者，继续接住这些穿过时间的文字。"
+      }
+    };
+
+    const storyPage = document.getElementById("story");
+    const storyTitle = document.getElementById("storyTitle");
+    const storyText = document.getElementById("storyText");
+    const storyKey = document.getElementById("storyKey");
+    const storyPrompt = document.getElementById("storyPrompt");
+    const storyNote = document.getElementById("storyNote");
+    const storyActions = document.getElementById("storyActions");
+    const yearButtons = [...document.querySelectorAll(".year-button[data-era]")];
+
+    function setEra(era) {
+      const data = storyData[era];
+      storyPage.dataset.era = era;
+      storyTitle.textContent = data.title;
+      storyText.textContent = data.text;
+      storyKey.textContent = data.key;
+      storyPrompt.textContent = data.prompt;
+      storyNote.textContent = data.note;
+      renderStoryAction(era);
+      yearButtons.forEach((button) => button.classList.toggle("active", button.dataset.era === era));
+    }
+
+    function renderStoryAction(era) {
+      storyActions.replaceChildren();
+      if (era !== "digital") return;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "glass-button primary story-rub-button";
+      button.textContent = "现在，亲手唤醒它";
+      button.addEventListener("click", () => {
+        setRubStep(0);
+        resetCanvasState();
+        showPage("rubbing");
+      });
+      storyActions.appendChild(button);
+    }
+
+    yearButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setEra(button.dataset.era);
+      });
+    });
+
+    const books = [
+      {
+        name: "鲁诗",
+        color: "#332018",
+        image: "assets/lushi.png",
+        quote: "关关雎鸠，在河之洲。",
+        source: "《诗经·周南·关雎》",
+        detail: "《鲁诗》是汉代《诗》学的重要传本之一，让诗歌不只停留在吟唱里，也进入了经学的世界。它保存的是人们如何用诗理解情感、礼乐与生活秩序。"
+      },
+      {
+        name: "尚书",
+        color: "#263322",
+        image: "assets/shangshu.png",
+        quote: "克明俊德，以亲九族。",
+        source: "《尚书·尧典》",
+        detail: "《尚书》如同一座古代政治档案馆，里面书写着帝王、臣子与国家治理的声音。它关心的是：一个国家凭什么安定，人又该如何承担责任。"
+      },
+      {
+        name: "周易",
+        color: "#1f2f38",
+        image: "assets/zhouyi.png",
+        quote: "天行健，君子以自强不息。",
+        source: "《周易·乾卦》",
+        detail: "《周易》包含卦爻辞和后世阐释传统，像古人观察世界变化的一套密码。风雷水火、进退得失，都被写成了关于选择、时机与自强的智慧。"
+      },
+      {
+        name: "仪礼",
+        color: "#4a3324",
+        image: "assets/yili.png",
+        quote: "士冠礼，筮于庙门。",
+        source: "《仪礼·士冠礼》",
+        detail: "《仪礼》记录的不是空洞规矩，而是古人怎样用仪式安排人生的重要时刻。成年、婚姻、宴饮、相见，都在礼中找到分寸。"
+      },
+      {
+        name: "春秋",
+        color: "#302638",
+        image: "assets/chunqiu.png",
+        quote: "元年春，王正月。",
+        source: "《春秋》",
+        detail: "《春秋》以简洁笔法记录鲁国历史。它常常与三传合读，重点不只在事件，也在后世如何解释这些事件。"
+      },
+      {
+        name: "公羊传",
+        color: "#4d241f",
+        image: "assets/gongyang.png",
+        quote: "何言乎王正月？大一统也。",
+        source: "《公羊传·隐公元年》",
+        detail: "《公羊传》是解释《春秋》的重要传本，它追问文字为什么这样写、为什么不那样写。它让历史不只是发生过的事，也变成可以被解释的道理。"
+      },
+      {
+        name: "论语",
+        color: "#1f3832",
+        image: "assets/lunyu.png",
+        quote: "学而时习之，不亦说乎？",
+        source: "《论语·学而》",
+        detail: "《论语》记录孔子及其弟子的言行，离学生最近，因为它谈学习、朋友、修身，也谈一个人怎样面对世界。两千多年过去，这些话仍像在身边发问。"
+      }
+    ];
+
+    const booksGrid = document.getElementById("booksGrid");
+    const bookDetail = document.getElementById("bookDetail");
+
+    books.forEach((book, index) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "book-card";
+      card.setAttribute("aria-label", `查看${book.name}说明`);
+      card.style.setProperty("--book-color", book.color);
+      card.innerHTML = `
+        <div class="book-object"><img class="book-image" src="${book.image}" alt="${book.name}"></div>
+      `;
+      card.addEventListener("pointerenter", () => setBook(index));
+      card.addEventListener("mouseenter", () => setBook(index));
+      card.addEventListener("focus", () => setBook(index));
+      card.addEventListener("click", () => setBook(index));
+      booksGrid.appendChild(card);
+    });
+
+    function setBook(index) {
+      const book = books[index];
+      [...booksGrid.children].forEach((child, childIndex) => {
+        const isActive = childIndex === index;
+        child.classList.toggle("active", isActive);
+      });
+      bookDetail.classList.remove("is-hidden");
+      bookDetail.innerHTML = `
+        <div class="book-detail-title">${book.name}</div>
+        <div class="book-detail-body">
+          <p class="book-detail-quote">“${book.quote}”<span class="book-detail-source">—— ${book.source}</span></p>
+          <p>${book.detail}</p>
+        </div>
+      `;
+    }
+
+    setBook(0);
+
+    const rubPage = document.getElementById("rubbing");
+    const rubSteps = [...document.querySelectorAll(".rub-step")];
+    const prevStep = document.getElementById("prevStep");
+    const nextStep = document.getElementById("nextStep");
+    const startRubbing = document.getElementById("startRubbing");
+    const toTimeline = document.getElementById("toTimeline");
+    const toRebirth = document.getElementById("toRebirth");
+    let rubStepIndex = 0;
+
+    function setRubStep(index) {
+      rubStepIndex = Math.max(0, Math.min(3, index));
+      updateStep();
+      if (rubStepIndex === 1) {
+        resizeCanvas();
+      }
+      if (rubStepIndex === 2) {
+        animateTimeline();
+      }
+    }
+
+    function updateStep() {
+      rubSteps.forEach((step, index) => step.classList.toggle("active", index === rubStepIndex));
+      const isCanvasStep = rubStepIndex === 1;
+      prevStep.classList.toggle("hidden", rubStepIndex === 0 || isCanvasStep);
+      nextStep.classList.toggle("hidden", isCanvasStep);
+      nextStep.textContent = rubStepIndex === 3 ? "完成" : "下";
+      nextStep.classList.toggle("complete", rubStepIndex === 3);
+      rubPage.classList.toggle("reborn", rubStepIndex === 3);
+    }
+
+    prevStep.addEventListener("click", () => setRubStep(rubStepIndex - 1));
+    nextStep.addEventListener("click", () => {
+      if (rubStepIndex === 3) {
+        showPage("story");
+        setRubStep(0);
+      } else {
+        setRubStep(rubStepIndex + 1);
+      }
+    });
+    startRubbing.addEventListener("click", () => setRubStep(1));
+    toTimeline.addEventListener("click", () => setRubStep(2));
+    toRebirth.addEventListener("click", () => setRubStep(3));
+
+    const particleWrap = document.getElementById("particleWrap");
+    const particleColors = ["#c4a882", "#d4c5a0", "#c9b39b", "#bda27b"];
+
+    for (let index = 0; index < 80; index += 1) {
+      const span = document.createElement("span");
+      span.className = "particle";
+      span.style.setProperty("--size", `${3 + Math.random() * 6}px`);
+      span.style.setProperty("--color", particleColors[index % particleColors.length]);
+      span.style.setProperty("--alpha", `${0.24 + Math.random() * 0.34}`);
+      span.style.setProperty("--angle", `${Math.random() * 360}deg`);
+      span.style.setProperty("--distance", `${260 + Math.random() * 210}px`);
+      span.style.setProperty("--duration", `${22 + Math.random() * 16}s`);
+      particleWrap.appendChild(span);
+    }
+
+    const canvas = document.getElementById("rubbingCanvas");
+    const ctx = canvas.getContext("2d");
+    const rubStatus = document.getElementById("rubStatus");
+    const canvasHint = document.getElementById("canvasHint");
+    const quoteReveal = document.getElementById("quoteReveal");
+    const toolButtons = [...document.querySelectorAll("[data-tool]")];
+    let tool = "clean";
+    let drawing = false;
+    let dust = [];
+    let paperProgress = 0;
+    let paperStartX = null;
+    let cleanProgress = 0;
+    let inkProgress = 0;
+    let inkCells = new Set();
+    let activePointer = null;
+    const gridCols = 12;
+    const gridRows = 8;
+    const stoneMaterialImage = new Image();
+    stoneMaterialImage.src = "assets/stone-material.png";
+    stoneMaterialImage.addEventListener("load", drawCanvas);
+
+    function resetCanvasState() {
+      dust = Array.from({ length: 160 }, () => ({
+        x: 0.18 + Math.random() * 0.64,
+        y: 0.14 + Math.random() * 0.72,
+        r: 3 + Math.random() * 8,
+        removed: false
+      }));
+      paperProgress = 0;
+      cleanProgress = 0;
+      inkProgress = 0;
+      inkCells = new Set();
+      toTimeline.classList.remove("show");
+      rubStatus.textContent = "请先用清碑刷拂去石面尘土。";
+      canvasHint.textContent = "请选择“清碑刷”，按住并移动来清除尘土。";
+      quoteReveal.textContent = "经文尚未显现";
+      setTool("clean");
+      updateRubbingState();
+      drawCanvas();
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const dpr = window.devicePixelRatio || 1;
+      const nextWidth = Math.floor(rect.width * dpr);
+      const nextHeight = Math.floor(rect.height * dpr);
+      if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+      }
+      drawCanvas();
+    }
+
+    function stoneBounds() {
+      const w = canvas.width;
+      const h = canvas.height;
+      const width = Math.min(w * 0.6, h * 0.62);
+      const height = width * 1.15;
+      return {
+        x: (w - width) / 2,
+        y: (h - height) / 2 - h * 0.03,
+        width,
+        height
+      };
+    }
+
+    function drawStonePath(bounds) {
+      const { x, y, width, height } = bounds;
+      ctx.beginPath();
+      ctx.moveTo(x + width * 0.13, y + height * 0.05);
+      ctx.lineTo(x + width * 0.3, y + height * 0.02);
+      ctx.lineTo(x + width * 0.56, y + height * 0.04);
+      ctx.lineTo(x + width * 0.78, y + height * 0.06);
+      ctx.lineTo(x + width * 0.94, y + height * 0.27);
+      ctx.lineTo(x + width * 0.91, y + height * 0.5);
+      ctx.lineTo(x + width * 0.88, y + height * 0.82);
+      ctx.lineTo(x + width * 0.66, y + height * 0.96);
+      ctx.lineTo(x + width * 0.42, y + height * 0.94);
+      ctx.lineTo(x + width * 0.22, y + height * 0.91);
+      ctx.lineTo(x + width * 0.05, y + height * 0.68);
+      ctx.lineTo(x + width * 0.07, y + height * 0.45);
+      ctx.lineTo(x + width * 0.09, y + height * 0.22);
+      ctx.closePath();
+    }
+
+    function stableNoise(a, b, salt = 0) {
+      const value = Math.sin(a * 12.9898 + b * 78.233 + salt * 37.719) * 43758.5453;
+      return value - Math.floor(value);
+    }
+
+    function drawCanvas() {
+      if (!ctx) return;
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      const bounds = stoneBounds();
+
+      const bg = ctx.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, "#f8f0df");
+      bg.addColorStop(1, "#efe2c9");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      drawStonePath(bounds);
+      const stoneGrad = ctx.createLinearGradient(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+      stoneGrad.addColorStop(0, "#707977");
+      stoneGrad.addColorStop(0.38, "#56605f");
+      stoneGrad.addColorStop(0.68, "#3e4646");
+      stoneGrad.addColorStop(1, "#2e3332");
+      ctx.fillStyle = stoneGrad;
+      ctx.fill();
+
+      ctx.save();
+      drawStonePath(bounds);
+      ctx.clip();
+      if (stoneMaterialImage.complete && stoneMaterialImage.naturalWidth) {
+        ctx.save();
+        ctx.globalAlpha = 0.56;
+        ctx.globalCompositeOperation = "screen";
+        ctx.drawImage(stoneMaterialImage, bounds.x, bounds.y, bounds.width, bounds.height);
+        ctx.restore();
+        ctx.save();
+        ctx.globalAlpha = 0.38;
+        ctx.globalCompositeOperation = "multiply";
+        ctx.drawImage(stoneMaterialImage, bounds.x - bounds.width * 0.1, bounds.y, bounds.width * 1.18, bounds.height);
+        ctx.restore();
+      }
+      for (let i = 0; i < 62; i += 1) {
+        const px = bounds.x + ((i * 73) % 1000) / 1000 * bounds.width;
+        const py = bounds.y + ((i * 191) % 1000) / 1000 * bounds.height;
+        ctx.fillStyle = i % 3 ? "rgba(12,13,12,0.075)" : "rgba(196,178,142,0.055)";
+        ctx.beginPath();
+        ctx.ellipse(px, py, bounds.width * (0.018 + (i % 6) * 0.01), bounds.height * (0.006 + (i % 4) * 0.004), i * 0.63, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 9; i += 1) {
+        ctx.strokeStyle = `rgba(12, 12, 11, ${0.045 + (i % 3) * 0.018})`;
+        ctx.lineWidth = (0.9 + (i % 3) * 0.6) * (canvas.width / 900);
+        ctx.beginPath();
+        const sx = bounds.x + bounds.width * (0.14 + i * 0.085);
+        const sy = bounds.y + bounds.height * (0.12 + Math.abs(stableNoise(i, 4)) * 0.7);
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx + bounds.width * (0.08 + Math.abs(stableNoise(i, 7)) * 0.16), sy + bounds.height * (0.05 + Math.abs(stableNoise(i, 9)) * 0.18));
+        ctx.stroke();
+      }
+
+      const inkRatio = inkProgress / 100;
+      const cleanRatio = cleanProgress / 100;
+      const textOpacity = cleanProgress < 70 ? 0.14 + cleanRatio * 0.14 : 0.32 + inkRatio * 0.58;
+      drawInscription(bounds, Math.min(0.92, textOpacity), cleanProgress < 70 ? 3 : inkProgress > 45 ? 0 : 1.5);
+
+      dust.forEach((dot) => {
+        if (dot.removed) return;
+        ctx.fillStyle = "rgba(206, 184, 142, 0.55)";
+        ctx.beginPath();
+        ctx.arc(bounds.x + dot.x * bounds.width, bounds.y + dot.y * bounds.height, dot.r * (canvas.width / 900), 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      if (paperProgress > 0) {
+        const paperWidth = bounds.width * paperProgress;
+        const paperX = bounds.x + bounds.width - paperWidth;
+        ctx.fillStyle = `rgba(255, 248, 232, ${0.26 + paperProgress * 0.42})`;
+        ctx.fillRect(paperX, bounds.y + bounds.height * 0.05, paperWidth, bounds.height * 0.9);
+        ctx.fillStyle = `rgba(78, 62, 42, ${0.012 + paperProgress * 0.018})`;
+        for (let i = 0; i < 18; i += 1) {
+          const y = bounds.y + bounds.height * (0.08 + i * 0.048);
+          ctx.fillRect(paperX, y, paperWidth, 1 * (canvas.width / 900));
+        }
+        ctx.strokeStyle = "rgba(255,255,255,0.44)";
+        ctx.lineWidth = 2 * (canvas.width / 900);
+        ctx.strokeRect(paperX, bounds.y + bounds.height * 0.05, paperWidth, bounds.height * 0.9);
+      }
+
+      if (inkProgress > 0) {
+        ctx.fillStyle = `rgba(16, 16, 18, ${0.035 + inkProgress * 0.0022})`;
+        ctx.globalCompositeOperation = "multiply";
+        for (const cell of inkCells) {
+          const [cx, cy] = cell.split("-").map(Number);
+          for (let layer = 0; layer < 3; layer += 1) {
+            const jitterX = (stableNoise(cx + layer, cy, 1) - 0.5) * bounds.width / gridCols * 0.72;
+            const jitterY = (stableNoise(cx, cy + layer, 2) - 0.5) * bounds.height / gridRows * 0.62;
+            const rx = bounds.width / gridCols * (0.34 + Math.abs(stableNoise(cx, cy, layer)) * 0.34);
+            const ry = bounds.height / gridRows * (0.22 + Math.abs(stableNoise(cy, cx, layer + 3)) * 0.28);
+            ctx.beginPath();
+            ctx.ellipse(
+              bounds.x + ((cx + 0.5) / gridCols) * bounds.width + jitterX,
+              bounds.y + ((cy + 0.5) / gridRows) * bounds.height + jitterY,
+              rx,
+              ry,
+              stableNoise(cx, cy, layer + 5) * Math.PI,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+          }
+        }
+        ctx.globalCompositeOperation = "source-over";
+        drawInscription(bounds, Math.min(0.92, 0.18 + inkProgress * 0.01), inkProgress > 55 ? 0 : 0.8);
+      }
+      ctx.restore();
+    }
+
+    function drawInscription(bounds, opacity, blur) {
+      ctx.save();
+      if (blur) {
+        ctx.filter = `blur(${blur * (canvas.width / 900)}px)`;
+      }
+      ctx.fillStyle = `rgba(14, 14, 12, ${opacity * 0.82})`;
+      const fontSize = Math.max(22, Math.min(bounds.width * 0.068, bounds.height * 0.078));
+      ctx.font = `${fontSize}px "CooperZhengKai", "KaiTi", "STKaiti", "Kaiti SC", "FangSong", "STFangsong", "Noto Serif SC", serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.shadowColor = `rgba(255, 255, 255, ${opacity * 0.08})`;
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 1 * (canvas.width / 900);
+      const columns = [
+        "学而时习之",
+        "不亦说乎",
+        "有朋自远方来",
+        "不亦乐乎",
+        "人不知而不愠",
+        "不亦君子乎"
+      ];
+      const startX = bounds.x + bounds.width * 0.78;
+      const colGap = bounds.width * 0.105;
+      const top = bounds.y + bounds.height * 0.16;
+      const charGap = fontSize * 1.12;
+      columns.forEach((line, index) => {
+        const x = startX - index * colGap + (stableNoise(index, 2) - 0.5) * fontSize * 0.08;
+        const chars = [...line];
+        chars.forEach((char, charIndex) => {
+          const y = top + charIndex * charGap + (stableNoise(index, charIndex, 4) - 0.5) * fontSize * 0.06;
+          const charOpacity = opacity * (0.54 + stableNoise(index, charIndex, 8) * 0.34);
+          ctx.fillStyle = `rgba(236, 232, 214, ${charOpacity * 0.08})`;
+          ctx.fillText(char, x + fontSize * 0.025, y + fontSize * 0.025);
+          ctx.fillStyle = `rgba(10, 10, 9, ${charOpacity})`;
+          ctx.fillText(char, x, y);
+        });
+      });
+      ctx.restore();
+    }
+
+    function getPointerPoint(event) {
+      const rect = canvas.getBoundingClientRect();
+      const dprX = canvas.width / rect.width;
+      const dprY = canvas.height / rect.height;
+      const source = event.touches ? event.touches[0] : event;
+      return {
+        x: (source.clientX - rect.left) * dprX,
+        y: (source.clientY - rect.top) * dprY
+      };
+    }
+
+    function handleCanvasMove(point) {
+      const bounds = stoneBounds();
+      const inside = point.x >= bounds.x && point.x <= bounds.x + bounds.width && point.y >= bounds.y && point.y <= bounds.y + bounds.height;
+      const inPaperDragZone =
+        point.x >= bounds.x - bounds.width * 0.24 &&
+        point.x <= bounds.x + bounds.width * 1.12 &&
+        point.y >= bounds.y + bounds.height * 0.02 &&
+        point.y <= bounds.y + bounds.height * 0.98;
+      if (tool === "paper") {
+        if (!inPaperDragZone) return;
+      } else if (!inside) {
+        return;
+      }
+
+      if (tool === "clean") {
+        const radius = bounds.width * 0.12;
+        dust.forEach((dot) => {
+          const dx = bounds.x + dot.x * bounds.width - point.x;
+          const dy = bounds.y + dot.y * bounds.height - point.y;
+          if (Math.hypot(dx, dy) < radius) {
+            dot.removed = true;
+          }
+        });
+        cleanProgress = Math.round((dust.filter((dot) => dot.removed).length / dust.length) * 100);
+        if (cleanProgress >= 70) {
+          rubStatus.textContent = "石面已露出，可以覆纸。";
+          canvasHint.textContent = "选择“宣纸”，从右向左覆上石面。";
+        }
+      }
+
+      if (tool === "paper") {
+        const absoluteProgress = (bounds.x + bounds.width - point.x) / (bounds.width * 0.72);
+        paperProgress = Math.max(paperProgress, Math.min(1, absoluteProgress));
+        if (paperProgress >= 0.88 || point.x <= bounds.x + bounds.width * 0.2) {
+          paperProgress = 1;
+          rubStatus.textContent = "宣纸已覆上石面，可以上墨。";
+          canvasHint.textContent = "选择“拓包”，在石面不同区域轻拍。";
+        }
+      }
+
+      if (tool === "ink") {
+        const cellX = Math.floor(((point.x - bounds.x) / bounds.width) * gridCols);
+        const cellY = Math.floor(((point.y - bounds.y) / bounds.height) * gridRows);
+        for (let dx = -1; dx <= 1; dx += 1) {
+          for (let dy = -1; dy <= 1; dy += 1) {
+            const nextX = cellX + dx;
+            const nextY = cellY + dy;
+            if (nextX >= 0 && nextX < gridCols && nextY >= 0 && nextY < gridRows) {
+              inkCells.add(`${nextX}-${nextY}`);
+            }
+          }
+        }
+        inkProgress = Math.round((inkCells.size / (gridCols * gridRows)) * 100);
+        if (inkProgress >= 60) {
+          rubStatus.textContent = "文字已经显现。刚才被唤醒的不只是一句经文，也是一段穿过千年的道路。";
+          canvasHint.textContent = "拓片文字已经显现。";
+          quoteReveal.textContent = "学而时习之，不亦说乎？";
+          toTimeline.classList.add("show");
+        }
+      }
+
+      updateRubbingState();
+      drawCanvas();
+    }
+
+    function updateRubbingState() {
+      toolButtons.forEach((button) => {
+        if (button.dataset.tool === "paper") {
+          button.disabled = cleanProgress < 70;
+        }
+        if (button.dataset.tool === "ink") {
+          button.disabled = paperProgress < 1;
+        }
+      });
+    }
+
+    function setTool(nextTool) {
+      const button = toolButtons.find((item) => item.dataset.tool === nextTool);
+      if (!button || button.disabled) return;
+      tool = nextTool;
+      canvas.dataset.tool = nextTool;
+      paperStartX = null;
+      toolButtons.forEach((item) => item.classList.toggle("active", item.dataset.tool === nextTool));
+      if (nextTool === "clean") {
+        canvasHint.textContent = "按住石面移动清碑刷，拂去浮尘。";
+      }
+      if (nextTool === "paper") {
+        canvasHint.textContent = "从右向左拖动宣纸，使纸面贴合刻痕。";
+      }
+      if (nextTool === "ink") {
+        canvasHint.textContent = "用拓包在石面轻拍，让墨色进入刻痕。";
+      }
+    }
+
+    toolButtons.forEach((button) => {
+      button.addEventListener("click", () => setTool(button.dataset.tool));
+    });
+
+    canvas.addEventListener("pointerdown", (event) => {
+      drawing = true;
+      activePointer = event.pointerId;
+      canvas.setPointerCapture(activePointer);
+      handleCanvasMove(getPointerPoint(event));
+    });
+
+    canvas.addEventListener("pointermove", (event) => {
+      if (!drawing) return;
+      handleCanvasMove(getPointerPoint(event));
+    });
+
+    canvas.addEventListener("pointerup", () => {
+      drawing = false;
+      paperStartX = null;
+    });
+
+    canvas.addEventListener("pointercancel", () => {
+      drawing = false;
+      paperStartX = null;
+    });
+
+    window.addEventListener("resize", resizeCanvas);
+
+    const timeline = document.getElementById("timeline");
+    let timelineTimers = [];
+
+    function animateTimeline() {
+      timelineTimers.forEach((timer) => clearTimeout(timer));
+      timelineTimers = [];
+      const nodes = [...timeline.querySelectorAll(".time-node")];
+      nodes.forEach((node) => node.classList.remove("active"));
+      nodes.forEach((node, index) => {
+        timelineTimers.push(setTimeout(() => node.classList.add("active"), index * 1000 + 120));
+      });
+    }
+
+    const scripturePassages = [
+      {
+        title: "《论语·学而》节选",
+        source: "《论语》",
+        original: [
+          "学而时习之，不亦说乎？",
+          "有朋自远方来，不亦乐乎？",
+          "人不知而不愠，不亦君子乎？"
+        ],
+        translation: [
+          "学习之后经常温习，不也是令人愉快的吗？",
+          "有朋友从远方来，不也是快乐的吗？",
+          "别人不了解自己而不怨恨，不也是君子的修养吗？"
+        ],
+        cardQuote: "学而时习之，不亦说乎？",
+        cardNote: "文字被刻在石上，也被一次次重新读懂。"
+      },
+      {
+        title: "《诗经·卫风·淇奥》节选（《鲁诗》传本）",
+        source: "《鲁诗》传本",
+        original: "如切如磋，如琢如磨。",
+        translation: "修养德行就像加工骨角玉石一样，要不断地切磋、琢磨。",
+        cardNote: "修养像琢玉，需要在一次次切磋中变得清明。"
+      },
+      {
+        title: "《诗经·周南·关雎》节选（《鲁诗》传本）",
+        source: "《鲁诗》传本",
+        original: "关关雎鸠，在河之洲。窈窕淑女，君子好逑。",
+        translation: "雎鸠鸟关关地鸣叫，相伴在河中小洲；美丽贤淑的女子，是君子的理想配偶。",
+        cardQuote: "关关雎鸠，在河之洲。",
+        cardNote: "诗歌从河洲鸟鸣开始，也把情感放进礼与秩序之中。"
+      },
+      {
+        title: "《诗经·小雅·车舝》节选（《鲁诗》传本）",
+        source: "《鲁诗》传本",
+        original: "高山仰止，景行行止。",
+        translation: "仰望高山令人敬仰，行走在大道上令人向往。",
+        cardNote: "高山与大道，都是古人用来指向德行的形象。"
+      },
+      {
+        title: "《诗经·周颂·敬之》节选（《鲁诗》传本）",
+        source: "《鲁诗》传本",
+        original: "日就月将，学有缉熙于光明。",
+        translation: "每日有所成就，每月有所进步，不断积累学问，就能达到光明的境界。",
+        cardNote: "学问不是一日完成，而是在日日积累中接近光明。"
+      },
+      {
+        title: "《诗经·大雅·抑》节选（《鲁诗》传本）",
+        source: "《鲁诗》传本",
+        original: "投我以桃，报之以李。",
+        translation: "别人赠我桃子，我回报他李子。",
+        cardNote: "往来有回应，情义也在彼此赠答中延续。"
+      },
+      {
+        title: "《尚书·大禹谟》节选",
+        source: "《尚书》",
+        original: "人心惟危，道心惟微；惟精惟一，允执厥中。",
+        translation: "人的欲望是危险的，天理的精微是难以察觉的；只有精诚专一，才能不偏不倚地恪守中正之道。",
+        cardNote: "守住中正，需要在复杂的人心里保持清醒。"
+      },
+      {
+        title: "《尚书·大禹谟》节选",
+        source: "《尚书》",
+        original: "罪疑惟轻，功疑惟重。与其杀不辜，宁失不经。",
+        translation: "罪行有疑问时从轻处罚，功劳有疑问时从重奖赏；与其错杀无辜，宁可执法失于常规。",
+        cardQuote: "罪疑惟轻，功疑惟重。",
+        cardNote: "古人谈刑罚时，也把谨慎与仁心放在法度之前。"
+      },
+      {
+        title: "《尚书·商书·仲虺之诰》节选",
+        source: "《尚书》",
+        original: "好问则裕，自用则小。能自得师者王，谓人莫己若者亡。",
+        translation: "喜欢请教别人就会变得渊博，刚愎自用就会变得浅薄。能自己找到良师的人可以称王，认为别人都不如自己的人终究灭亡。",
+        cardQuote: "好问则裕，自用则小。",
+        cardNote: "愿意请教，才会让人的心胸和见识打开。"
+      },
+      {
+        title: "《尚书·商书·盘庚》节选",
+        source: "《尚书》",
+        original: "若网在纲，有条而不紊；若农服田力穑，乃亦有秋。",
+        translation: "就像渔网系在总绳上，才能有条理而不混乱；就像农民辛勤耕种田地，才能有秋天的收获。",
+        cardNote: "治理如纲举目张，也像耕作一样需要踏实经营。"
+      },
+      {
+        title: "《尚书·虞书·舜典》节选",
+        source: "《尚书》",
+        original: "直而温，宽而栗，刚而无虐，简而无傲。",
+        translation: "正直而温和，宽厚而严肃，刚强而不暴虐，简约而不傲慢。",
+        cardNote: "理想人格不是单一的刚强，而是在分寸中保持平衡。"
+      },
+      {
+        title: "《尚书·周书·周官》节选",
+        source: "《尚书》",
+        original: "作德，心逸日休；作伪，心劳日拙。",
+        translation: "行善积德，内心就会安逸，日益美好；弄虚作假，内心就会疲惫，日益困窘。",
+        cardNote: "善与伪会留下不同的心迹，也会改变一个人的路。"
+      },
+      {
+        title: "《周易·乾卦》节选",
+        source: "《周易》",
+        original: "乾道变化，各正性命，保合太和，乃利贞。",
+        translation: "天道运转变化，万物各自端正其禀性与命运，保持和谐的统一，这样才利于守正。",
+        cardNote: "天地变化之中，古人看见守正与和合的道理。"
+      },
+      {
+        title: "《周易·升卦》节选",
+        source: "《周易》",
+        original: "君子以顺德，积小以高大。",
+        translation: "君子顺应美德而行，从积累小事开始成就崇高的事业。",
+        cardNote: "高远之事，常常从一点一点的积累开始。"
+      },
+      {
+        title: "《周易·贲卦》节选",
+        source: "《周易》",
+        original: "观乎人文，以化成天下。",
+        translation: "观察人间的礼乐教化，可以用它来教化天下。",
+        cardNote: "礼乐与文字，是古人理解世界、安顿人心的方式。"
+      },
+      {
+        title: "《周易·乾卦》节选",
+        source: "《周易》",
+        original: "君子终日乾乾，夕惕若厉，无咎。",
+        translation: "君子白天勤奋努力，夜晚也保持警惕，好像面临危险一样，这样就不会有过错。",
+        cardNote: "真正的进取，既有勤勉，也有自省。"
+      },
+      {
+        title: "《周易·乾卦》节选",
+        source: "《周易》",
+        original: "天行健，君子以自强不息。",
+        translation: "天体的运行刚健有力，永不停息，君子应效法天道，奋发图强，永不懈怠。",
+        cardNote: "天道不息，人的志气也应在行走中不断生长。"
+      },
+      {
+        title: "《周易·恒卦》节选",
+        source: "《周易》",
+        original: "不恒其德，或承之羞。",
+        translation: "不能恒久保持其美德，或许会招致羞辱。",
+        cardNote: "德行贵在长久，失去恒心便容易失去方向。"
+      },
+      {
+        title: "《仪礼·士冠礼》节选",
+        source: "《仪礼》",
+        original: "吉月令辰，乃申尔服。敬尔威仪，淑慎尔德。",
+        translation: "在这吉祥美好的时刻，为你加冠成礼；你要敬慎自己的仪表，善良谨慎地修养品德。",
+        cardQuote: "敬尔威仪，淑慎尔德。",
+        cardNote: "冠礼里的祝辞，提醒人成长也意味着自我约束。"
+      },
+      {
+        title: "《仪礼·聘礼》节选",
+        source: "《仪礼》",
+        original: "凡行礼者，必先敬其心，而后敬其容；容敬而后辞顺，辞顺而后礼成。",
+        translation: "凡是行礼的人，必须先内心恭敬，然后才能外在仪态恭敬；仪态恭敬了，言辞才能和顺；言辞和顺了，礼仪才算完成。",
+        cardQuote: "凡行礼者，必先敬其心。",
+        cardNote: "礼不只在动作，更先发生在一颗恭敬的心里。"
+      },
+      {
+        title: "《春秋》节选",
+        source: "《春秋》",
+        original: "国将兴，听于民；将亡，听于神。",
+        translation: "国家将要兴盛时，会听取百姓的意见；国家将要灭亡时，才会去求神问卜。",
+        cardNote: "国家兴亡，在古人看来也能从听谁的声音中看见端倪。"
+      },
+      {
+        title: "《春秋·僖公九年》节选",
+        source: "《春秋》",
+        original: "公家之利，知无不为，忠也。",
+        translation: "凡是对国家有利的事，知道就没有不做的，这就是忠诚。",
+        cardNote: "忠诚不是空话，而是在有益于公义时愿意行动。"
+      },
+      {
+        title: "《春秋·昭公二十年》节选",
+        source: "《春秋》",
+        original: "宽以济猛，猛以济宽，政是以和。",
+        translation: "用宽大来调节严厉，用严厉来调节宽大，政事才能和谐。",
+        cardNote: "治理需要宽严相济，过与不及都会失衡。"
+      },
+      {
+        title: "《春秋·僖公十四年》节选",
+        source: "《春秋》",
+        original: "皮之不存，毛将安傅？",
+        translation: "皮都不存在了，毛还能依附在哪里呢？",
+        cardNote: "根基若失，依附其上的事物也难以存在。"
+      },
+      {
+        title: "《春秋·庄公四年》节选",
+        source: "《春秋》",
+        original: "临大事，不忘大义。",
+        translation: "面临重大事件时，不可忘记大义所在。",
+        cardNote: "越到关键时刻，越要记得什么是不可放下的义。"
+      },
+      {
+        title: "《公羊传·宣公十五年》节选",
+        source: "《公羊传》",
+        original: "君子见人之厄则矜制之，小人见人之厄则幸之。",
+        translation: "君子看到别人身处困境，会心生怜悯；小人看到别人遭遇不幸，则会幸灾乐祸。",
+        cardNote: "人在困厄面前的反应，照见了内心的高下。"
+      },
+      {
+        title: "《公羊传·桓公十一年》节选",
+        source: "《公羊传》",
+        original: "杀人以自生，亡人以自存，君子不为也。",
+        translation: "为了保全自己就去杀害别人，为了自己生存就让人陷入死地，君子不会这样做。",
+        cardNote: "真正的君子，不会用伤害他人的方式保全自己。"
+      },
+      {
+        title: "《公羊传·隐公十一年》节选",
+        source: "《公羊传》",
+        original: "君子之道也，修其国，以及其邻；安其家，以及其亲。",
+        translation: "君子的道义在于，治理好自己的国家，并把恩德推及邻国；安定好自己的家庭，并把关爱推及亲人。",
+        cardNote: "修身治国并非隔绝，而是由近及远地推开。"
+      },
+      {
+        title: "《公羊传·文公十二年》节选",
+        source: "《公羊传》",
+        original: "贵贱不逾，长幼以序，亲疏以分，是故圣人制礼。",
+        translation: "尊贵与卑贱不相逾越，长幼按照次序排列，亲疏依照关系划分，因此圣人制定了礼仪。",
+        cardNote: "礼的秩序，试图让人与人之间各安其位。"
+      },
+      {
+        title: "《论语·里仁》节选",
+        source: "《论语》",
+        original: "见贤思齐焉，见不贤而内自省也。",
+        translation: "看见贤德的人就想着向他看齐，看见不贤德的人就内心反省自己。",
+        cardNote: "看见他人，也是在照见自己应当成为怎样的人。"
+      },
+      {
+        title: "《论语·为政》节选",
+        source: "《论语》",
+        original: "温故而知新，可以为师矣。",
+        translation: "温习旧知识并能从中获得新见解，就可以做老师了。",
+        cardNote: "旧文字被重新读起，也可能生出新的理解。"
+      },
+      {
+        title: "《论语·子张》节选",
+        source: "《论语》",
+        original: "博学而笃志，切问而近思，仁在其中矣。",
+        translation: "广泛学习并坚定志向，恳切发问并联系实际思考，仁德就在这当中了。",
+        cardNote: "学习、志向、追问和思考，一同通向仁。"
+      },
+      {
+        title: "《论语·卫灵公》节选",
+        source: "《论语》",
+        original: "志士仁人，无求生以害仁，有杀身以成仁。",
+        translation: "有志之士与仁德之人，不会贪生而损害仁德，只会勇于牺牲来成全仁德。",
+        cardNote: "有些价值，在古人心中比生命本身更重。"
+      }
+    ];
+
+    const makeCard = document.getElementById("makeCard");
+    const finalCard = document.getElementById("finalCard");
+    const inscriptionInput = document.getElementById("inscriptionInput");
+    const inscriptionText = document.getElementById("inscriptionText");
+    const rebirthCard = document.getElementById("rebirthCard");
+    const switchPassage = document.getElementById("switchPassage");
+    const passageTitle = document.getElementById("passageTitle");
+    const passageOriginal = document.getElementById("passageOriginal");
+    const passageTranslation = document.getElementById("passageTranslation");
+    const cardClassic = document.getElementById("cardClassic");
+    const cardTranslation = document.getElementById("cardTranslation");
+    const defaultInscription = "愿在石头的沉默里，听见文字的回声。";
+    const inscriptionLimit = 60;
+    let currentPassageIndex = 0;
+
+    function passageLines(value) {
+      return Array.isArray(value) ? value.join("\n") : value;
+    }
+
+    function resetInscriptionDraft() {
+      inscriptionInput.value = "";
+      inscriptionText.textContent = defaultInscription;
+      finalCard.classList.remove("show");
+      makeCard.textContent = "落款成笺";
+    }
+
+    function renderPassage(index, animate = false) {
+      const passage = scripturePassages[index];
+      const applyText = () => {
+        passageTitle.textContent = passage.title;
+        passageOriginal.textContent = passageLines(passage.original);
+        passageTranslation.textContent = passageLines(passage.translation);
+        cardClassic.textContent = passage.cardQuote || passageLines(passage.original).split(/[。！？；]/)[0] + "。";
+        cardTranslation.textContent = passage.cardNote || "这句话从经文中被重新抽出，也等待今天的人重新读懂。";
+      };
+
+      if (!animate) {
+        applyText();
+        return;
+      }
+
+      rebirthCard.classList.add("is-switching");
+      window.setTimeout(() => {
+        applyText();
+        window.requestAnimationFrame(() => rebirthCard.classList.remove("is-switching"));
+      }, 180);
+    }
+
+    function nextRandomPassageIndex() {
+      if (scripturePassages.length <= 1) return 0;
+      let nextIndex = currentPassageIndex;
+      while (nextIndex === currentPassageIndex) {
+        nextIndex = Math.floor(Math.random() * scripturePassages.length);
+      }
+      return nextIndex;
+    }
+
+    switchPassage.addEventListener("click", () => {
+      currentPassageIndex = nextRandomPassageIndex();
+      resetInscriptionDraft();
+      renderPassage(currentPassageIndex, true);
+    });
+
+    inscriptionInput.addEventListener("input", () => {
+      if (inscriptionInput.value.length > inscriptionLimit) {
+        inscriptionInput.value = inscriptionInput.value.slice(0, inscriptionLimit);
+      }
+    });
+
+    makeCard.addEventListener("click", () => {
+      const text = (inscriptionInput.value.trim() || defaultInscription).slice(0, inscriptionLimit);
+      inscriptionText.textContent = text;
+      finalCard.classList.add("show");
+      makeCard.textContent = "落款成笺";
+    });
+
+    renderPassage(currentPassageIndex);
+
+    resetCanvasState();
+    updateStep();
+  </script>
+</body>
+</html>
