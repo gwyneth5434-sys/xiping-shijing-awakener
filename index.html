@@ -406,50 +406,23 @@
       display: none;
     }
 
-    .xun-icon {
-      position: relative;
-      display: block;
-      width: 24px;
-      height: 29px;
-      border-radius: 48% 48% 42% 42% / 44% 44% 54% 54%;
-      background:
-        radial-gradient(circle at 34% 24%, rgba(255, 244, 210, 0.24), transparent 26%),
-        linear-gradient(145deg, rgba(162, 115, 66, 0.92), rgba(86, 61, 42, 0.96));
-      box-shadow:
-        inset 3px 3px 8px rgba(255, 242, 196, 0.2),
-        inset -5px -6px 10px rgba(0, 0, 0, 0.3);
-      clip-path: polygon(46% 0, 68% 9%, 88% 36%, 84% 78%, 58% 100%, 25% 92%, 10% 62%, 16% 28%);
+    .speaker-icon {
+      width: 22px;
+      height: 22px;
+      color: rgba(248, 237, 213, 0.86);
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
     }
 
-    .xun-icon::before,
-    .xun-icon::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(30, 22, 16, 0.68);
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    .speaker-icon path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    .xun-icon::before {
-      top: 5px;
-      left: 9px;
-      width: 7px;
-      height: 5px;
-    }
-
-    .xun-icon::after {
-      top: 13px;
-      left: 10px;
-      width: 4px;
-      height: 4px;
-      box-shadow:
-        -5px 6px 0 rgba(30, 22, 16, 0.62),
-        5px 6px 0 rgba(30, 22, 16, 0.62),
-        0 12px 0 rgba(30, 22, 16, 0.58);
-    }
-
-    .music-toggle.is-paused .xun-icon {
-      opacity: 0.58;
+    .music-toggle.is-paused .speaker-wave {
+      opacity: 0.24;
     }
 
     .music-toggle.is-paused::after {
@@ -534,7 +507,7 @@
 
     .story-layout {
       display: grid;
-      grid-template-columns: minmax(360px, 0.98fr) minmax(460px, 1.02fr);
+      grid-template-columns: minmax(360px, 0.94fr) minmax(540px, 1.06fr);
       gap: clamp(42px, 5.4vw, 78px);
       align-items: center;
     }
@@ -770,7 +743,7 @@
 
     .story-card {
       min-height: 0;
-      max-width: 660px;
+      max-width: 720px;
       padding: 0;
       color: rgba(35, 29, 22, 0.96);
     }
@@ -805,17 +778,18 @@
 
     .story-card p {
       margin: 0;
-      color: rgba(45, 36, 26, 0.8);
+      color: rgba(45, 36, 26, 0.68);
       font-size: 18px;
       line-height: 2.1;
     }
 
     .story-meta {
       display: flex;
-      flex-wrap: wrap;
-      gap: 14px 30px;
+      flex-wrap: nowrap;
+      gap: 18px;
       align-items: baseline;
       margin: 32px 0 18px;
+      white-space: nowrap;
     }
 
     .meta-pill {
@@ -827,7 +801,7 @@
     }
 
     .meta-pill + .meta-pill {
-      padding-left: 28px;
+      padding-left: 22px;
       border-left: 1px solid rgba(44, 36, 27, 0.22);
     }
 
@@ -861,7 +835,7 @@
 
     .meta-pill strong {
       color: rgba(34, 28, 22, 0.74);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       line-height: 1.7;
     }
@@ -886,7 +860,7 @@
       border-radius: 0;
       background: transparent;
       border: 0;
-      color: rgba(28, 23, 17, 0.95);
+      color: rgba(24, 20, 15, 0.9);
       line-height: 2;
       font-size: 18px;
     }
@@ -1667,8 +1641,8 @@
     }
 
     .timeline-card {
-      padding: clamp(22px, 4vw, 42px);
-      min-height: 440px;
+      padding: clamp(34px, 5vw, 56px);
+      min-height: 510px;
     }
 
     .timeline-title {
@@ -1683,15 +1657,15 @@
       position: relative;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
+      gap: 18px;
       align-items: start;
-      padding-top: 48px;
+      padding-top: 58px;
     }
 
     .timeline::before {
       content: "";
       position: absolute;
-      top: 72px;
+      top: 90px;
       left: 9%;
       right: 9%;
       height: 2px;
@@ -1702,7 +1676,7 @@
       position: relative;
       display: grid;
       justify-items: center;
-      gap: 14px;
+      gap: 16px;
       opacity: 0.35;
       transform: translateY(12px) scale(0.98);
       transition: opacity 0.45s ease, transform 0.55s var(--ease);
@@ -1714,8 +1688,8 @@
     }
 
     .time-dot {
-      width: 52px;
-      height: 52px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       display: grid;
       place-items: center;
@@ -1723,6 +1697,7 @@
       background: rgba(180, 60, 42, 0.86);
       border: 1px solid rgba(255, 255, 255, 0.3);
       box-shadow: 0 8px 40px rgba(120, 80, 60, 0.12);
+      font-size: 20px;
       font-weight: 700;
     }
 
@@ -1746,10 +1721,10 @@
     }
 
     .time-node span {
-      max-width: 160px;
+      max-width: 190px;
       color: rgba(44, 36, 27, 0.62);
-      font-size: 13px;
-      line-height: 1.7;
+      font-size: 15px;
+      line-height: 1.8;
       text-align: center;
     }
 
@@ -1773,8 +1748,8 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      height: 500px;
-      min-height: 500px;
+      height: 540px;
+      min-height: 540px;
       padding: clamp(26px, 2.6vw, 36px) clamp(28px, 3vw, 42px) 74px;
       color: #fff;
       background:
@@ -1843,13 +1818,14 @@
       margin-top: 16px;
       padding-top: 22px;
       border-top: 1px solid rgba(255, 255, 255, 0.14);
+      overflow: hidden;
     }
 
     .text-panel {
       min-height: 0;
-      max-height: 268px;
+      max-height: none;
       padding: 4px 22px 0 0;
-      overflow-y: auto;
+      overflow: hidden;
     }
 
     .text-panel + .text-panel {
@@ -1875,8 +1851,8 @@
     .text-panel p {
       margin: 0;
       color: rgba(255, 255, 255, 0.78);
-      line-height: 2;
-      font-size: 16px;
+      line-height: 1.86;
+      font-size: 15px;
       white-space: pre-line;
     }
 
@@ -1884,7 +1860,7 @@
       display: grid;
       grid-template-rows: auto 78px 50px minmax(0, 1fr);
       gap: 10px;
-      height: 500px;
+      height: 540px;
       padding-left: clamp(18px, 3vw, 36px);
       border-left: 1px solid rgba(255, 255, 255, 0.18);
     }
@@ -1990,6 +1966,39 @@
       word-break: break-word;
       max-height: none;
       overflow: visible;
+    }
+
+    .rebirth-next {
+      display: block;
+      min-height: 46px;
+      margin: 12px auto 0;
+      padding: 0 30px;
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.92);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(180, 60, 42, 0.46)),
+        rgba(180, 60, 42, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.32),
+        0 14px 34px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      backdrop-filter: blur(16px);
+      transition: opacity 0.5s ease, transform 0.5s var(--ease), background 0.24s ease;
+    }
+
+    .rebirth-next.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .rebirth-next:hover {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(180, 60, 42, 0.58)),
+        rgba(180, 60, 42, 0.24);
     }
 
     .red-seal {
@@ -2587,6 +2596,7 @@
               </aside>
             </div>
             <p class="demo-note">演示说明：后续会继续加入更多经文，让不同残石在课堂中被一次次重新读起。</p>
+            <button class="rebirth-next" type="button" id="toBooksFromRebirth">走近典籍</button>
           </section>
         </div>
       </section>
@@ -2595,7 +2605,11 @@
 
   <audio id="bgMusic" preload="none" loop src="assets/xiping-background-music.mp3"></audio>
   <button class="music-toggle is-paused" id="musicToggle" type="button" aria-label="播放背景音乐" title="背景音乐">
-    <span class="xun-icon" aria-hidden="true"></span>
+    <svg class="speaker-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 9v6h4l5 4V5L8 9H4z"></path>
+      <path class="speaker-wave" d="M16 8.5a5 5 0 0 1 0 7"></path>
+      <path class="speaker-wave" d="M18.5 6a8.5 8.5 0 0 1 0 12"></path>
+    </svg>
   </button>
 
   <script>
@@ -2635,7 +2649,7 @@
 
     function playMusic() {
       if (!bgMusic || musicUnavailable) return Promise.resolve(false);
-      bgMusic.volume = 0.12;
+      bgMusic.volume = 0.2;
       bgMusic.loop = true;
       const playTask = bgMusic.play();
       if (!playTask) {
@@ -2670,7 +2684,7 @@
     }
 
     if (bgMusic && musicToggle) {
-      bgMusic.volume = 0.12;
+      bgMusic.volume = 0.2;
       bgMusic.loop = true;
       bgMusic.addEventListener("error", () => {
         musicUnavailable = true;
@@ -3586,6 +3600,7 @@
     const passageTranslation = document.getElementById("passageTranslation");
     const cardClassic = document.getElementById("cardClassic");
     const cardTranslation = document.getElementById("cardTranslation");
+    const toBooksFromRebirth = document.getElementById("toBooksFromRebirth");
     const defaultInscription = "愿在石头的沉默里，听见文字的回声。";
     const inscriptionLimit = 60;
     let currentPassageIndex = 0;
@@ -3598,6 +3613,7 @@
       inscriptionInput.value = "";
       inscriptionText.textContent = defaultInscription;
       finalCard.classList.remove("show");
+      toBooksFromRebirth.classList.remove("show");
       makeCard.textContent = "落款成笺";
     }
 
@@ -3648,7 +3664,12 @@
       const text = (inscriptionInput.value.trim() || defaultInscription).slice(0, inscriptionLimit);
       inscriptionText.textContent = text;
       finalCard.classList.add("show");
+      toBooksFromRebirth.classList.add("show");
       makeCard.textContent = "落款成笺";
+    });
+
+    toBooksFromRebirth.addEventListener("click", () => {
+      showPage("books");
     });
 
     renderPassage(currentPassageIndex);
